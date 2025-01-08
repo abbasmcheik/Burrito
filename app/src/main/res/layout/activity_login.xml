@@ -4,25 +4,29 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="16dp"
-    android:gravity="center">
+    android:gravity="center"
+    android:background="@drawable/gradient_background">
+
 
     <EditText
         android:id="@+id/editTextEmailOrUsername"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
         android:hint="Email or Username"
         android:inputType="textEmailAddress"
-        android:padding="8dp"
-        android:layout_marginBottom="16dp" />
+        android:minHeight="48dp"
+        android:padding="8dp" />
 
     <EditText
         android:id="@+id/editTextPassword"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
         android:hint="Password"
         android:inputType="textPassword"
-        android:padding="8dp"
-        android:layout_marginBottom="16dp" />
+        android:minHeight="48dp"
+        android:padding="8dp" />
 
     <Button
         android:id="@+id/buttonSubmitLogin"

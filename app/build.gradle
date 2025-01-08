@@ -39,4 +39,6 @@ dependencies {
     androidTestImplementation libs.espresso.core
     implementation libs.volley // For network requests
     implementation libs.gson // For JSON parsing
+    implementation libs.cardview //for cardview
+
 }

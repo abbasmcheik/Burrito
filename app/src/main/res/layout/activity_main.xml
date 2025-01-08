@@ -24,4 +24,16 @@
         android:text="Login"
         android:padding="8dp"
         android:layout_marginTop="20dp" />
+
+    <TextView
+        android:id="@+id/textViewSignUp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Sign Up! It's free!"
+        android:textColor="@android:color/holo_blue_light"
+        android:textSize="14sp"
+        android:padding="16dp"
+        android:layout_marginTop="8dp"
+        android:clickable="true"
+        android:focusable="true" />
 </LinearLayout>
