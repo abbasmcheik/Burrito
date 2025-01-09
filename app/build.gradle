@@ -40,5 +40,8 @@ dependencies {
     implementation libs.volley // For network requests
     implementation libs.gson // For JSON parsing
     implementation libs.cardview //for cardview
+    implementation libs.material.v190
+
+    //implementation 'com.android.support:design:28.0.0'
 
 }

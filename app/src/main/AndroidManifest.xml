@@ -29,7 +29,8 @@
         <!-- Login Activity -->
         <activity android:name=".LoginActivity"  android:exported="true" />
         <activity android:name=".SignUpActivity" android:exported="true" />
-        <activity android:name=".ProfileActivity" />
+        <activity android:name=".ProfileActivity" android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".JobPostingActivity" android:theme="@style/AppTheme.NoActionBar" />
 
     </application>
 </manifest>
