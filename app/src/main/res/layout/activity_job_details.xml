@@ -1,0 +1,195 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/gradient_background"
+    android:padding="16dp">
+
+    <!-- Toolbar with Back Button -->
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/colorPrimary"
+        android:elevation="4dp"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <!-- Status (Below Toolbar, Top Right) -->
+    <TextView
+        android:id="@+id/textViewStatus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/toolbar"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:padding="8dp"
+        android:text="Open"
+        android:textColor="@android:color/white"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+
+    <ImageButton
+        android:id="@+id/buttonEdit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/toolbar"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="Edit"
+        android:src="@android:drawable/ic_menu_edit"
+        android:visibility="gone" />
+
+
+    <!-- Scrollable Content -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/textViewStatus"
+        android:layout_marginTop="16dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <!-- Job Title -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:cardBackgroundColor="@android:color/black"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="4dp">
+
+                <TextView
+                    android:id="@+id/textViewJobTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="16dp"
+                    android:text="Title: "
+                    android:textColor="@android:color/white"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+            </androidx.cardview.widget.CardView>
+
+            <!-- Job Description -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:cardBackgroundColor="@android:color/black"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="4dp">
+
+                <TextView
+                    android:id="@+id/textViewJobDescription"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="16dp"
+                    android:text="Description: "
+                    android:textColor="@android:color/white"
+                    android:textSize="16sp" />
+            </androidx.cardview.widget.CardView>
+
+            <!-- Category -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:cardBackgroundColor="@android:color/black"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="4dp">
+
+                <TextView
+                    android:id="@+id/textViewCategory"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="16dp"
+                    android:text="Category: "
+                    android:textColor="@android:color/white"
+                    android:textSize="16sp" />
+            </androidx.cardview.widget.CardView>
+
+            <!-- Skills Required -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:cardBackgroundColor="@android:color/black"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="4dp">
+
+                <TextView
+                    android:id="@+id/textViewSkillsRequired"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="16dp"
+                    android:text="Skills Required: "
+                    android:textColor="@android:color/white"
+                    android:textSize="16sp" />
+            </androidx.cardview.widget.CardView>
+
+            <!-- Payout -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardBackgroundColor="@android:color/black"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="4dp">
+
+                <TextView
+                    android:id="@+id/textViewPayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="16dp"
+                    android:text="Payout: "
+                    android:textColor="@android:color/white"
+                    android:textSize="16sp" />
+            </androidx.cardview.widget.CardView>
+
+            <Button
+                android:id="@+id/buttonUploadFile"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:padding="12dp"
+                android:text="Upload Work File" />
+
+            <Button
+                android:id="@+id/buttonDownloadFile"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="12dp"
+                android:text="Download Work File" />
+            <Button
+                android:id="@+id/buttonSave"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/toolbar"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="16dp"
+                android:backgroundTint="@android:color/holo_purple"
+                android:visibility="gone"
+            android:text="Save"
+            android:textColor="@android:color/white"
+            android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/buttonDeleteJob"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:backgroundTint="@android:color/holo_red_light"
+                android:padding="12dp"
+                android:text="Delete Job"
+                android:textColor="@android:color/white"
+                android:visibility="gone" />
+
+        </LinearLayout>
+    </ScrollView>
+</RelativeLayout>

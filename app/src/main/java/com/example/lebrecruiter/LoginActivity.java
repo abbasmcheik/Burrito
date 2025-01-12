@@ -52,7 +52,7 @@ public class LoginActivity extends AppCompatActivity {
                                 SharedPreferences sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE);
                                 SharedPreferences.Editor editor = sharedPreferences.edit();
                                 editor.putString("role", role);
-                                editor.putInt("userId", Integer.parseInt(userId));
+                                editor.putString("userId", userId);
                                 editor.apply();
 
                                 // Redirect to ProfileActivity and pass user data

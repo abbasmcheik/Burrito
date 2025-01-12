@@ -16,6 +16,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.lebrecruiter.R;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -23,21 +24,19 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
-public class JobPostingActivity extends AppCompatActivity {
+public class JobPostingActivity extends BaseActivity {
 
     private EditText jobTitleEditText, jobDescriptionEditText, skillsEditText, categoryEditText, payoutEditText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_job_posting);
+        //setContentView(R.layout.activity_job_posting);
 
-        // Get the user role and recruiter ID from Intent
-        Intent intent = getIntent();
-        String userRole = intent.getStringExtra("role");
         // Retrieve user data from SharedPreferences
         SharedPreferences sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE);
-        int recruiterId = sharedPreferences.getInt("userId", -1);
+        String recruiterId = sharedPreferences.getString("userId", "");
+        String userRole = sharedPreferences.getString("role", "");
 
         // Restrict access to Recruiters only
         if (!"Recruiter".equalsIgnoreCase(userRole)) {
@@ -137,5 +136,10 @@ public class JobPostingActivity extends AppCompatActivity {
         // Add request to the queue
         RequestQueue queue = Volley.newRequestQueue(this);
         queue.add(postRequest);
+    }
+
+    @Override
+    protected int getLayoutResourceId() {
+        return R.layout.activity_job_posting;
     }
 }

@@ -1,17 +1,20 @@
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/nav_profile"
         android:icon="@drawable/ic_person"
-        android:title="Profile" />
+        android:title="Profile"
+        tools:ignore="HardcodedText" />
     <item
         android:id="@+id/nav_post_job"
         android:icon="@drawable/ic_addcircle"
         android:title="Post Job" />
 
     <item
-        android:id="@+id/nav_settings"
-        android:icon="@drawable/ic_settings"
-        android:title="Settings" />
+        android:id="@+id/nav_my_jobs"
+        android:icon="@drawable/ic_myjobs"
+        android:title="My Jobs" />
+
     <item
         android:id="@+id/nav_logout"
         android:icon="@drawable/ic_logout"

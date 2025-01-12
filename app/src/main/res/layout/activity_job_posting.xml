@@ -1,116 +1,149 @@
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@drawable/gradient_background"
-    android:padding="16dp">
+    android:layout_height="match_parent">
 
+    <!-- Main Content -->
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <!-- Job Title -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Job Title"
-            android:textColor="@android:color/white"
-            android:textSize="16sp"
-            android:layout_marginBottom="8dp" />
-
-        <EditText
-            android:id="@+id/editTextJobTitle"
+        <!-- Toolbar -->
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@android:color/black"
-            android:textColor="@android:color/white"
-            android:padding="12dp"
-            android:layout_marginBottom="16dp" />
+            android:background="?attr/colorPrimary"
+            android:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
 
-        <!-- Job Description -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Job Description"
-            android:textColor="@android:color/white"
-            android:textSize="16sp"
-            android:layout_marginBottom="8dp" />
-
-        <EditText
-            android:id="@+id/editTextJobDescription"
+        <!-- ScrollView Content -->
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@android:color/black"
-            android:textColor="@android:color/white"
-            android:padding="12dp"
-            android:layout_marginBottom="16dp"
-            android:lines="5"
-            android:gravity="top" />
+            android:layout_height="match_parent"
+            android:background="@drawable/gradient_background"
+            android:padding="16dp">
 
-        <!-- Required Skills -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Required Skills"
-            android:textColor="@android:color/white"
-            android:textSize="16sp"
-            android:layout_marginBottom="8dp" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
-        <EditText
-            android:id="@+id/editTextSkills"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@android:color/black"
-            android:textColor="@android:color/white"
-            android:padding="12dp"
-            android:layout_marginBottom="16dp" />
+                <!-- Job Title -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:text="Job Title"
+                    android:textColor="@android:color/white"
+                    android:textSize="16sp" />
 
-        <!-- Category -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Category"
-            android:textColor="@android:color/white"
-            android:textSize="16sp"
-            android:layout_marginBottom="8dp" />
+                <EditText
+                    android:id="@+id/editTextJobTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    android:background="@android:color/black"
+                    android:padding="12dp"
+                    android:textColor="@android:color/white" />
 
-        <EditText
-            android:id="@+id/editTextCategory"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@android:color/black"
-            android:textColor="@android:color/white"
-            android:padding="12dp"
-            android:layout_marginBottom="16dp" />
+                <!-- Job Description -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:text="Job Description"
+                    android:textColor="@android:color/white"
+                    android:textSize="16sp" />
 
-        <!-- Payout -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Payout"
-            android:textColor="@android:color/white"
-            android:textSize="16sp"
-            android:layout_marginBottom="8dp" />
+                <EditText
+                    android:id="@+id/editTextJobDescription"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    android:background="@android:color/black"
+                    android:gravity="top"
+                    android:lines="5"
+                    android:padding="12dp"
+                    android:textColor="@android:color/white" />
 
-        <EditText
-            android:id="@+id/editTextPayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@android:color/black"
-            android:textColor="@android:color/white"
-            android:padding="12dp"
-            android:inputType="numberDecimal"
-            android:layout_marginBottom="16dp" />
+                <!-- Required Skills -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:text="Required Skills"
+                    android:textColor="@android:color/white"
+                    android:textSize="16sp" />
 
-        <!-- Submit Button -->
-        <Button
-            android:id="@+id/buttonSubmitJob"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:backgroundTint="@android:color/black"
-            android:text="Post Job"
-            android:textColor="@android:color/white"
-            android:padding="12dp" />
+                <EditText
+                    android:id="@+id/editTextSkills"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    android:background="@android:color/black"
+                    android:padding="12dp"
+                    android:textColor="@android:color/white" />
+
+                <!-- Category -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:text="Category"
+                    android:textColor="@android:color/white"
+                    android:textSize="16sp" />
+
+                <EditText
+                    android:id="@+id/editTextCategory"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    android:background="@android:color/black"
+                    android:padding="12dp"
+                    android:textColor="@android:color/white" />
+
+                <!-- Payout -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:text="Payout"
+                    android:textColor="@android:color/white"
+                    android:textSize="16sp" />
+
+                <EditText
+                    android:id="@+id/editTextPayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    android:background="@android:color/black"
+                    android:inputType="numberDecimal"
+                    android:padding="12dp"
+                    android:textColor="@android:color/white" />
+
+                <!-- Submit Button -->
+                <Button
+                    android:id="@+id/buttonSubmitJob"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="@android:color/black"
+                    android:padding="12dp"
+                    android:text="Post Job"
+                    android:textColor="@android:color/white" />
+            </LinearLayout>
+        </ScrollView>
     </LinearLayout>
-</ScrollView>
+
+    <!-- Navigation Drawer -->
+    <com.google.android.material.navigation.NavigationView
+        android:id="@+id/navigation_view"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:background="@android:color/white"
+        app:headerLayout="@layout/nav_header"
+        app:menu="@menu/drawer_menu" />
+</androidx.drawerlayout.widget.DrawerLayout>
