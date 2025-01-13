@@ -26,10 +26,12 @@ import com.android.volley.ParseError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
-import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.lebrecruiter.utils.VolleyMultipartRequest;
+
+import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -41,6 +43,11 @@ public class JobDetailsActivity extends AppCompatActivity {
 
     private static final int PICK_FILE_REQUEST_CODE = 1;
     private int jobId; // Job ID for API calls
+    private TextView statusTextView;
+    private TextView titleTextView, descriptionTextView, categoryTextView, skillsTextView, payoutTextView;
+    private EditText titleEditText, descriptionEditText, categoryEditText, skillsEditText, payoutEditText;
+    private ImageButton editButton;
+    private Button saveButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,12 +80,36 @@ public class JobDetailsActivity extends AppCompatActivity {
             return;
         }
 
-        // Populate Job Details
-        ((TextView) findViewById(R.id.textViewJobTitle)).setText("Title: " + title);
-        ((TextView) findViewById(R.id.textViewJobDescription)).setText("Description: " + description);
-        ((TextView) findViewById(R.id.textViewCategory)).setText("Category: " + category);
-        ((TextView) findViewById(R.id.textViewSkillsRequired)).setText("Skills Required: " + skillsRequired);
-        ((TextView) findViewById(R.id.textViewPayout)).setText("Payout: $" + payout);
+        // Initialize UI components
+        titleTextView = findViewById(R.id.textViewJobTitle);
+        descriptionTextView = findViewById(R.id.textViewJobDescription);
+        categoryTextView = findViewById(R.id.textViewCategory);
+        skillsTextView = findViewById(R.id.textViewSkillsRequired);
+        payoutTextView = findViewById(R.id.textViewPayout);
+
+        titleEditText = findViewById(R.id.editTextJobTitle);
+        descriptionEditText = findViewById(R.id.editTextJobDescription);
+        categoryEditText = findViewById(R.id.editTextCategory);
+        skillsEditText = findViewById(R.id.editTextSkillsRequired);
+        payoutEditText = findViewById(R.id.editTextPayout);
+
+        statusTextView = findViewById(R.id.textViewStatus);
+        editButton = findViewById(R.id.buttonEdit);
+        saveButton = findViewById(R.id.buttonSave);
+
+        // Populate fields
+        titleTextView.setText(title);
+        descriptionTextView.setText(description);
+        categoryTextView.setText(category);
+        skillsTextView.setText(skillsRequired);
+        payoutTextView.setText(payout);
+        statusTextView.setText("Status: " + status);
+
+        titleTextView.setVisibility(View.VISIBLE);
+        descriptionTextView.setVisibility(View.VISIBLE);
+        categoryTextView.setVisibility(View.VISIBLE);
+        skillsTextView.setVisibility(View.VISIBLE);
+        payoutTextView.setVisibility(View.VISIBLE);
 
         TextView statusTextView = findViewById(R.id.textViewStatus);
         statusTextView.setText(status);
@@ -96,13 +127,27 @@ public class JobDetailsActivity extends AppCompatActivity {
 
         if ("Open".equalsIgnoreCase(status)) {
             editButton.setVisibility(View.VISIBLE);
-
-            editButton.setOnClickListener(v -> {
-                enableEditing(true);
-            });
         } else {
             editButton.setVisibility(View.GONE);
         }
+
+        // Handle Edit Button
+        editButton.setOnClickListener(v -> {
+            enableEditing(true);
+            saveButton.setVisibility(View.VISIBLE); // Show Save Button
+            editButton.setVisibility(View.GONE);    // Hide Edit Button
+        });
+
+        // Handle Save Button
+        saveButton.setOnClickListener(v -> {
+            if (validatePayout()) {
+                saveJobDetails(titleEditText.getText().toString().trim(), descriptionEditText.getText().toString().trim(), categoryEditText.getText().toString().trim(), skillsEditText.getText().toString().trim(), payoutEditText.getText().toString().trim());
+            } else {
+                Toast.makeText(this, "Payout must be a valid number.", Toast.LENGTH_SHORT).show();
+            }
+        });
+        // Disable editing by default
+        enableEditing(false);
 
         // Setup Buttons
         Button uploadButton = findViewById(R.id.buttonUploadFile);
@@ -150,11 +195,9 @@ public class JobDetailsActivity extends AppCompatActivity {
 
             String url = "http://10.0.2.2:8080/api/jobs/" + jobId + "/uploadWorkFile";
 
-            VolleyMultipartRequest request = new VolleyMultipartRequest(Request.Method.POST, url,
-                    response -> Toast.makeText(this, "File uploaded successfully!", Toast.LENGTH_SHORT).show(),
-                    error -> {
-                        Toast.makeText(this, "Failed to upload file: " + error.getMessage(), Toast.LENGTH_SHORT).show();
-                    }) {
+            VolleyMultipartRequest request = new VolleyMultipartRequest(Request.Method.POST, url, response -> Toast.makeText(this, "File uploaded successfully!", Toast.LENGTH_SHORT).show(), error -> {
+                Toast.makeText(this, "Failed to upload file: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+            }) {
                 @Override
                 protected Map<String, DataPart> getByteData() {
                     Map<String, DataPart> params = new HashMap<>();
@@ -194,11 +237,10 @@ public class JobDetailsActivity extends AppCompatActivity {
     private void downloadFile() {
         String url = "http://10.0.2.2:8080/api/jobs/" + jobId + "/downloadWorkFile";
 
-        Request<NetworkResponse> request = new Request<NetworkResponse>(Request.Method.GET, url,
-                error -> {
-                    Toast.makeText(this, "Failed to download file", Toast.LENGTH_SHORT).show();
-                    Log.e("DownloadError", "Error: ", error);
-                }) {
+        Request<NetworkResponse> request = new Request<NetworkResponse>(Request.Method.GET, url, error -> {
+            Toast.makeText(this, "Failed to download file", Toast.LENGTH_SHORT).show();
+            Log.e("DownloadError", "Error: ", error);
+        }) {
             @Override
             protected Response<NetworkResponse> parseNetworkResponse(NetworkResponse response) {
                 try {
@@ -218,9 +260,7 @@ public class JobDetailsActivity extends AppCompatActivity {
                     fos.close();
 
                     // Notify the user of the download location
-                    runOnUiThread(() -> Toast.makeText(getApplicationContext(),
-                            "File downloaded to: " + outputFile.getAbsolutePath(),
-                            Toast.LENGTH_LONG).show());
+                    runOnUiThread(() -> Toast.makeText(getApplicationContext(), "File downloaded to: " + outputFile.getAbsolutePath(), Toast.LENGTH_LONG).show());
                 } catch (Exception e) {
                     e.printStackTrace();
                     return Response.error(new ParseError(e));
@@ -247,53 +287,110 @@ public class JobDetailsActivity extends AppCompatActivity {
 
     private void showDeleteConfirmationDialog() {
         // Show a confirmation dialog before deleting
-        new AlertDialog.Builder(this)
-                .setTitle("Delete Job")
-                .setMessage("Are you sure you want to delete this job?")
-                .setPositiveButton("Delete", (dialog, which) -> deleteJob())
-                .setNegativeButton("Cancel", null)
-                .show();
+        new AlertDialog.Builder(this).setTitle("Delete Job").setMessage("Are you sure you want to delete this job?").setPositiveButton("Delete", (dialog, which) -> deleteJob()).setNegativeButton("Cancel", null).show();
     }
 
     private void deleteJob() {
         String url = "http://10.0.2.2:8080/api/jobs/" + jobId;
 
-        StringRequest request = new StringRequest(Request.Method.DELETE, url,
-                response -> {
-                    // Notify the user and pass result back
-                    Toast.makeText(this, "Job deleted successfully!", Toast.LENGTH_SHORT).show();
+        StringRequest request = new StringRequest(Request.Method.DELETE, url, response -> {
+            // Notify the user and pass result back
+            Toast.makeText(this, "Job deleted successfully!", Toast.LENGTH_SHORT).show();
 
-                    // Pass the jobId back to MyJobsActivity to remove it from the list
-                    Intent resultIntent = new Intent();
-                    resultIntent.putExtra("deletedJobId", jobId);
-                    setResult(RESULT_OK, resultIntent);
+            // Pass the jobId back to MyJobsActivity to remove it from the list
+            Intent resultIntent = new Intent();
+            resultIntent.putExtra("deletedJobId", jobId);
+            setResult(RESULT_OK, resultIntent);
 
-                    // Finish the activity
-                    finish();
-                },
-                error -> {
-                    // Handle errors
-                    Toast.makeText(this, "Failed to delete job", Toast.LENGTH_SHORT).show();
-                    Log.e("DeleteJobError", "Error: ", error);
-                });
+            // Finish the activity
+            finish();
+        }, error -> {
+            // Handle errors
+            Toast.makeText(this, "Failed to delete job", Toast.LENGTH_SHORT).show();
+            Log.e("DeleteJobError", "Error: ", error);
+        });
 
         RequestQueue queue = Volley.newRequestQueue(this);
         queue.add(request);
     }
 
     private void enableEditing(boolean enable) {
-        // Enable editing for specific fields
-        EditText titleEditText = findViewById(R.id.editTextJobTitle);
-        EditText descriptionEditText = findViewById(R.id.editTextJobDescription);
-        EditText payoutEditText = findViewById(R.id.editTextPayout);
+        toggleField(titleTextView, titleEditText, enable);
+        toggleField(descriptionTextView, descriptionEditText, enable);
+        toggleField(categoryTextView, categoryEditText, enable);
+        toggleField(skillsTextView, skillsEditText, enable);
+        toggleField(payoutTextView, payoutEditText, enable);
+    }
 
-        // Example: Enable or disable fields
-        titleEditText.setEnabled(enable);
-        descriptionEditText.setEnabled(enable);
-        payoutEditText.setEnabled(enable);
-
-        if (enable) {
-            Toast.makeText(this, "You can now edit the job fields.", Toast.LENGTH_SHORT).show();
+    private void toggleField(TextView textView, EditText editText, boolean editable) {
+        if (editable) {
+            // When editing, copy text from TextView to EditText
+            String currentText = textView.getText().toString();
+            if (currentText.startsWith(textView.getHint() + " ")) {
+                currentText = currentText.replaceFirst(textView.getHint() + " ", "").trim();
+            }
+            editText.setText(currentText);
+            textView.setVisibility(View.GONE);
+            editText.setVisibility(View.VISIBLE);
+        } else {
+            // When displaying, copy text from EditText to TextView only if EditText has a value
+            if (!editText.getText().toString().isEmpty()) {
+                String prefix = textView.getHint() != null ? textView.getHint().toString() + " " : "";
+                textView.setText(prefix + editText.getText().toString());
+            }
+            editText.setVisibility(View.GONE);
+            textView.setVisibility(View.VISIBLE);
         }
     }
+
+
+    private boolean validatePayout() {
+        try {
+            Double.parseDouble(payoutEditText.getText().toString().trim());
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
+
+    private void saveJobDetails(String title, String description, String category, String skills, String payout) {
+        String url = "http://10.0.2.2:8080/api/jobs/" + jobId;
+
+        // Create the request body as a JSON object
+        Map<String, String> params = new HashMap<>();
+        params.put("title", title);
+        params.put("description", description);
+        params.put("category", category);
+        params.put("skillsRequired", skills);
+        params.put("payout", payout);
+
+        JSONObject jsonBody = new JSONObject(params);
+
+        // Create the PUT request
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.PUT, url, jsonBody,
+                response -> {
+                    Toast.makeText(this, "Job details updated successfully!", Toast.LENGTH_SHORT).show();
+
+                    // Disable editing after saving
+                    enableEditing(false);
+                    saveButton.setVisibility(View.GONE); // Hide Save Button
+                    editButton.setVisibility(View.VISIBLE); // Show Edit Button
+                },
+                error -> {
+                    Toast.makeText(this, "Failed to update job details.", Toast.LENGTH_SHORT).show();
+                    error.printStackTrace();
+                }) {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> headers = new HashMap<>();
+                headers.put("Content-Type", "application/json"); // Set Content-Type to JSON
+                return headers;
+            }
+        };
+
+        // Add the request to the queue
+        RequestQueue queue = Volley.newRequestQueue(this);
+        queue.add(request);
+    }
+
 }

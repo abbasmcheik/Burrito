@@ -1,22 +1,21 @@
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@drawable/gradient_background">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="16dp"
-        android:background="@drawable/gradient_background"> <!-- Apply gradient -->
+        android:padding="16dp"> <!-- Apply gradient -->
 
         <!-- User Role Selection -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
+            android:layout_marginBottom="16dp"
             android:gravity="center"
-            android:layout_marginBottom="16dp">
+            android:orientation="horizontal">
 
             <Button
                 android:id="@+id/buttonRecruiter"
@@ -39,62 +38,84 @@
                 android:textStyle="bold" />
         </LinearLayout>
 
-
         <!-- Input Fields -->
         <EditText
             android:id="@+id/editTextFirstName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
             android:hint="First Name"
             android:inputType="textPersonName"
-            android:layout_marginBottom="8dp" />
+            android:minHeight="48dp" />
 
         <EditText
             android:id="@+id/editTextLastName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
             android:hint="Last Name"
             android:inputType="textPersonName"
-            android:layout_marginBottom="8dp" />
+            android:minHeight="48dp" />
 
         <EditText
             android:id="@+id/editTextUserName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
             android:hint="Username"
             android:inputType="text"
-            android:layout_marginBottom="8dp" />
+            android:minHeight="48dp" />
 
         <EditText
             android:id="@+id/editTextEmail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
             android:hint="Email"
             android:inputType="textEmailAddress"
-            android:layout_marginBottom="8dp" />
+            android:minHeight="48dp" />
 
         <EditText
             android:id="@+id/editTextPassword"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
             android:hint="Password"
             android:inputType="textPassword"
-            android:layout_marginBottom="8dp" />
+            android:minHeight="48dp" />
 
         <EditText
             android:id="@+id/editTextDateOfBirth"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
             android:hint="Date of Birth (YYYY-MM-DD)"
             android:inputType="date"
-            android:layout_marginBottom="8dp" />
+            android:minHeight="48dp" />
+
+        <Spinner
+            android:id="@+id/spinnerSecurityQuestion"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:entries="@array/security_questions"
+            android:minHeight="48dp" />
+
+        <EditText
+            android:id="@+id/editTextSecurityAnswer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:hint="Security Answer"
+            android:inputType="text"
+            android:minHeight="48dp" />
 
         <Button
             android:id="@+id/buttonSubmitSignUp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Sign Up"
             android:layout_gravity="center"
-            android:padding="8dp" />
+            android:padding="8dp"
+            android:text="Sign Up" />
     </LinearLayout>
 </ScrollView>

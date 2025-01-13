@@ -9,11 +9,9 @@ import android.widget.Toast;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.JsonArrayRequest;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.lebrecruiter.models.Job;
 import com.example.lebrecruiter.models.JobAdapter;
-import com.example.lebrecruiter.R;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -59,12 +57,11 @@ public class MyJobsActivity extends BaseActivity {
             intent.putExtra("jobId", selectedJob.getJobId());
             intent.putExtra("title", selectedJob.getTitle());
             intent.putExtra("description", selectedJob.getDescription());
-            intent.putExtra("category", "Sample Category"); // Replace with real data
-            intent.putExtra("skillsRequired", "Sample Skills"); // Replace with real data
-            intent.putExtra("payout", "500.00"); // Replace with real data
+            intent.putExtra("category", "Sample Category"); // Replace with real category if available
+            intent.putExtra("skillsRequired", selectedJob.getSkillsRequired()); // Pass actual skills
+            intent.putExtra("payout", selectedJob.getPayout()); // Pass actual payout
             intent.putExtra("status", selectedJob.getStatus());
 
-            // Start JobDetailsActivity with a request code
             startActivityForResult(intent, JOB_DETAILS_REQUEST_CODE);
         });
     }
@@ -72,28 +69,28 @@ public class MyJobsActivity extends BaseActivity {
     private void fetchJobs(String userId) {
         String url = "http://10.0.2.2:8080/api/jobs/recruiter/" + userId;
 
-        JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, url, null,
-                response -> {
-                    jobsList.clear();
-                    for (int i = 0; i < response.length(); i++) {
-                        try {
-                            JSONObject jobJson = response.getJSONObject(i);
-                            String title = jobJson.getString("title");
-                            String description = jobJson.getString("description");
-                            String status = jobJson.getString("status");
-                            int jobId = jobJson.getInt("jobId");
+        JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, url, null, response -> {
+            jobsList.clear();
+            for (int i = 0; i < response.length(); i++) {
+                try {
+                    JSONObject jobJson = response.getJSONObject(i);
+                    String title = jobJson.getString("title");
+                    String description = jobJson.getString("description");
+                    String status = jobJson.getString("status");
+                    String skillsRequired = jobJson.getString("skillsRequired"); // Fetch skills
+                    String payout = jobJson.getString("payout"); // Fetch payout
+                    int jobId = jobJson.getInt("jobId");
 
-                            jobsList.add(new Job(jobId, title, description, status));
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                    jobAdapter.notifyDataSetChanged();
-                },
-                error -> {
-                    Toast.makeText(this, "Failed to load jobs.", Toast.LENGTH_SHORT).show();
-                    error.printStackTrace();
-                });
+                    jobsList.add(new Job(jobId, title, description, status, skillsRequired, payout));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+            jobAdapter.notifyDataSetChanged();
+        }, error -> {
+            Toast.makeText(this, "Failed to load jobs.", Toast.LENGTH_SHORT).show();
+            error.printStackTrace();
+        });
 
         RequestQueue queue = Volley.newRequestQueue(this);
         queue.add(request);

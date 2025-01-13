@@ -14,7 +14,7 @@
         android:elevation="4dp"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
 
-    <!-- Status (Below Toolbar, Top Right) -->
+    <!-- Status (Below Toolbar, Top Left) -->
     <TextView
         android:id="@+id/textViewStatus"
         android:layout_width="wrap_content"
@@ -29,6 +29,7 @@
         android:textSize="20sp"
         android:textStyle="bold" />
 
+    <!-- Edit Button -->
     <ImageButton
         android:id="@+id/buttonEdit"
         android:layout_width="wrap_content"
@@ -40,8 +41,7 @@
         android:background="?attr/selectableItemBackgroundBorderless"
         android:contentDescription="Edit"
         android:src="@android:drawable/ic_menu_edit"
-        android:visibility="gone" />
-
+        android:visibility="visible" />
 
     <!-- Scrollable Content -->
     <ScrollView
@@ -65,15 +65,31 @@
                 app:cardCornerRadius="12dp"
                 app:cardElevation="4dp">
 
-                <TextView
-                    android:id="@+id/textViewJobTitle"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="16dp"
-                    android:text="Title: "
-                    android:textColor="@android:color/white"
-                    android:textSize="18sp"
-                    android:textStyle="bold" />
+                    android:orientation="vertical">
+
+
+
+                    <EditText
+                        android:id="@+id/editTextJobTitle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Title"
+                        android:visibility="gone"
+                        android:textColor="@android:color/white"
+                        android:backgroundTint="@android:color/white" />
+                    <TextView
+                        android:id="@+id/textViewJobTitle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Title: "
+                        android:textColor="@android:color/white"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
             </androidx.cardview.widget.CardView>
 
             <!-- Job Description -->
@@ -85,14 +101,29 @@
                 app:cardCornerRadius="12dp"
                 app:cardElevation="4dp">
 
-                <TextView
-                    android:id="@+id/textViewJobDescription"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="16dp"
-                    android:text="Description: "
-                    android:textColor="@android:color/white"
-                    android:textSize="16sp" />
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/textViewJobDescription"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Description: "
+                        android:textColor="@android:color/white"
+                        android:textSize="16sp" />
+
+                    <EditText
+                        android:id="@+id/editTextJobDescription"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Description"
+                        android:visibility="gone"
+                        android:textColor="@android:color/white"
+                        android:backgroundTint="@android:color/white" />
+                </LinearLayout>
             </androidx.cardview.widget.CardView>
 
             <!-- Category -->
@@ -104,14 +135,29 @@
                 app:cardCornerRadius="12dp"
                 app:cardElevation="4dp">
 
-                <TextView
-                    android:id="@+id/textViewCategory"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="16dp"
-                    android:text="Category: "
-                    android:textColor="@android:color/white"
-                    android:textSize="16sp" />
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/textViewCategory"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Category: "
+                        android:textColor="@android:color/white"
+                        android:textSize="16sp" />
+
+                    <EditText
+                        android:id="@+id/editTextCategory"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Category"
+                        android:visibility="gone"
+                        android:textColor="@android:color/white"
+                        android:backgroundTint="@android:color/white" />
+                </LinearLayout>
             </androidx.cardview.widget.CardView>
 
             <!-- Skills Required -->
@@ -123,14 +169,29 @@
                 app:cardCornerRadius="12dp"
                 app:cardElevation="4dp">
 
-                <TextView
-                    android:id="@+id/textViewSkillsRequired"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="16dp"
-                    android:text="Skills Required: "
-                    android:textColor="@android:color/white"
-                    android:textSize="16sp" />
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/textViewSkillsRequired"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Skills Required: "
+                        android:textColor="@android:color/white"
+                        android:textSize="16sp" />
+
+                    <EditText
+                        android:id="@+id/editTextSkillsRequired"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Skills Required"
+                        android:visibility="gone"
+                        android:textColor="@android:color/white"
+                        android:backgroundTint="@android:color/white" />
+                </LinearLayout>
             </androidx.cardview.widget.CardView>
 
             <!-- Payout -->
@@ -141,14 +202,30 @@
                 app:cardCornerRadius="12dp"
                 app:cardElevation="4dp">
 
-                <TextView
-                    android:id="@+id/textViewPayout"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="16dp"
-                    android:text="Payout: "
-                    android:textColor="@android:color/white"
-                    android:textSize="16sp" />
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/textViewPayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Payout: "
+                        android:textColor="@android:color/white"
+                        android:textSize="16sp" />
+
+                    <EditText
+                        android:id="@+id/editTextPayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Payout"
+                        android:inputType="numberDecimal"
+                        android:visibility="gone"
+                        android:textColor="@android:color/white"
+                        android:backgroundTint="@android:color/white" />
+                </LinearLayout>
             </androidx.cardview.widget.CardView>
 
             <Button
@@ -165,19 +242,17 @@
                 android:layout_height="wrap_content"
                 android:padding="12dp"
                 android:text="Download Work File" />
+
             <Button
                 android:id="@+id/buttonSave"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/toolbar"
-                android:layout_alignParentEnd="true"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="16dp"
+                android:layout_marginTop="16dp"
                 android:backgroundTint="@android:color/holo_purple"
                 android:visibility="gone"
-            android:text="Save"
-            android:textColor="@android:color/white"
-            android:textStyle="bold" />
+                android:text="Save"
+                android:textColor="@android:color/white"
+                android:textStyle="bold" />
 
             <Button
                 android:id="@+id/buttonDeleteJob"

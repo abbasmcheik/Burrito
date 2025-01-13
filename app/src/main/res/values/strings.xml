@@ -2,4 +2,8 @@
     <string name="app_name">LebRecruiter</string>
     <string name="open_drawer">Open Drawer</string>
     <string name="close_drawer">Close Drawer</string>
+    <string-array name="security_questions">
+        <item>What is the name of your first pet?</item>
+        <item>In what city did your parents meet?</item>
+    </string-array>
 </resources>

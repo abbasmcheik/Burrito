@@ -84,4 +84,33 @@ public class ApiHandler {
 
         void onError(VolleyError error);
     }
+
+    public void resetPassword(JSONObject requestBody, final ResetPasswordCallback callback) {
+        String url = BASE_URL + "/users/reset-password";
+
+        JsonObjectRequest request = new JsonObjectRequest(
+                Request.Method.POST,
+                url,
+                requestBody,
+                response -> {
+                    String message = response.optString("message", "Password reset successful");
+                    callback.onSuccess(message);
+                },
+                error -> {
+                    String errorMessage = "Failed to reset password";
+                    if (error.networkResponse != null) {
+                        errorMessage += ": " + new String(error.networkResponse.data);
+                    }
+                    callback.onError(errorMessage);
+                }
+        );
+
+        getRequestQueue().add(request);
+    }
+
+    public interface ResetPasswordCallback {
+        void onSuccess(String message);
+        void onError(String error);
+    }
+
 }

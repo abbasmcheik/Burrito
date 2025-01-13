@@ -28,6 +28,13 @@ public class LoginActivity extends AppCompatActivity {
         editTextEmailOrUsername = findViewById(R.id.editTextEmailOrUsername);
         editTextPassword = findViewById(R.id.editTextPassword);
         Button loginButton = findViewById(R.id.buttonSubmitLogin);
+        Button forgotPasswordButton = findViewById(R.id.buttonForgotPassword);
+
+        // Handle Forgot Password button click
+        forgotPasswordButton.setOnClickListener(v -> {
+            Intent intent = new Intent(LoginActivity.this, ResetPasswordActivity.class);
+            startActivity(intent);
+        });
 
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
