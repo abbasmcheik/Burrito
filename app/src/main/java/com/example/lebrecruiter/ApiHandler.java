@@ -5,6 +5,7 @@ import android.content.Context;
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
+import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
@@ -14,9 +15,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.nio.charset.StandardCharsets;
+import java.util.Map;
 
 public class ApiHandler {
-    private static final String BASE_URL = "http://10.0.2.2:8080/api"; // Replace <YOUR_SERVER_IP> with your server's IP
+    private static final String BASE_URL = "http://10.0.2.2:8080/api";
     private static ApiHandler instance;
     private RequestQueue requestQueue;
     private static Context context;
@@ -138,6 +140,8 @@ public class ApiHandler {
 
         getRequestQueue().add(request);
     }
+
+
 
 
     public interface ResetPasswordCallback {
