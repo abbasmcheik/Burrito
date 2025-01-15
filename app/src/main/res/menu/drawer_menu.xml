@@ -6,6 +6,11 @@
         android:title="Profile"
         tools:ignore="HardcodedText" />
     <item
+        android:id="@+id/nav_job_listings"
+        android:icon="@drawable/ic_person"
+        android:title="Job Listings"
+        tools:ignore="HardcodedText" />
+    <item
         android:id="@+id/nav_post_job"
         android:icon="@drawable/ic_addcircle"
         android:title="Post Job" />

@@ -1,0 +1,64 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="@android:color/black"
+    android:layout_margin="8dp"
+    android:elevation="4dp">
+
+    <!-- Job Title -->
+    <TextView
+        android:id="@+id/textViewJobTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Job Title"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:textColor="@android:color/white"
+        android:layout_marginBottom="4dp" />
+
+    <!-- Job Description -->
+    <TextView
+        android:id="@+id/textViewJobDescription"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Short job description here..."
+        android:textSize="14sp"
+        android:textColor="@android:color/white"
+        android:maxLines="2"
+        android:ellipsize="end"
+        android:layout_marginBottom="4dp" />
+
+    <!-- Job Skills -->
+    <TextView
+        android:id="@+id/textViewJobSkills"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Skills: "
+        android:textSize="14sp"
+        android:textColor="@android:color/white"
+        android:layout_marginBottom="4dp" />
+
+    <!-- Job Payout -->
+    <TextView
+        android:id="@+id/textViewJobPayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Payout: $"
+        android:textSize="14sp"
+        android:textColor="@android:color/white"
+        android:layout_marginBottom="4dp" />
+
+    <!-- Job Status -->
+    <TextView
+        android:id="@+id/textViewJobStatus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Status"
+        android:textSize="16sp"
+        android:textStyle="italic"
+        android:textColor="@android:color/white"
+        android:gravity="end|center_vertical" />
+</LinearLayout>

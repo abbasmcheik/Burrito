@@ -7,16 +7,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
-import com.example.lebrecruiter.R;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -120,8 +115,20 @@ public class JobPostingActivity extends BaseActivity {
         String url = "http://10.0.2.2:8080/api/jobs";
 
         JsonObjectRequest postRequest = new JsonObjectRequest(Request.Method.POST, url, jobData,
-                response -> Toast.makeText(this, "Job Posted Successfully", Toast.LENGTH_SHORT).show(),
+                response -> {
+                    // Show success message
+                    Toast.makeText(this, "Job Posted Successfully", Toast.LENGTH_SHORT).show();
+
+                    // Redirect to MyJobsActivity
+                    Intent intent = new Intent(this, MyJobsActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent);
+
+                    // Optional: Finish the current activity
+                    finish();
+                },
                 error -> {
+                    // Show error message
                     Toast.makeText(this, "Failed to Post Job", Toast.LENGTH_SHORT).show();
                     error.printStackTrace();
                 }) {
@@ -137,6 +144,7 @@ public class JobPostingActivity extends BaseActivity {
         RequestQueue queue = Volley.newRequestQueue(this);
         queue.add(postRequest);
     }
+
 
     @Override
     protected int getLayoutResourceId() {

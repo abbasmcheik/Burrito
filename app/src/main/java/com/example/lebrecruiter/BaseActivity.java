@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
@@ -42,7 +41,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
 
         initializeViews();
-        setupDrawer();  // No arguments
+        setupDrawer();
         setupNavigationView();
     }
 
@@ -90,14 +89,29 @@ public abstract class BaseActivity extends AppCompatActivity {
         navigationView.setNavigationItemSelectedListener(item -> handleNavigation(item));
     }
 
-    private void updateMenuVisibility(Menu menu) {
+    private void updateMenuVisibility(Menu menu) {// update drawer visibility according to userRole
         MenuItem postJobItem = menu.findItem(R.id.nav_post_job);
+        MenuItem myJobsItem = menu.findItem(R.id.nav_my_jobs);
+        MenuItem jobListings = menu.findItem(R.id.nav_job_listings);
+
         if (postJobItem != null) {
+            // Show Post Job menu item only for recruiters
             postJobItem.setVisible("Recruiter".equalsIgnoreCase(userRole));
         }
 
-        // Add more role-based visibility logic here
+        if (myJobsItem != null) {
+            // Show My Jobs menu item only for recruiters
+            myJobsItem.setVisible("Recruiter".equalsIgnoreCase(userRole));
+        }
+
+        if (jobListings != null) {
+            // Show My Jobs menu item only for freelancers
+            jobListings.setVisible("Freelancer".equalsIgnoreCase(userRole));
+        }
+
+        // Add more role-based visibility logic here if needed
     }
+
 
     protected boolean handleNavigation(@NonNull MenuItem item) {
         int id = item.getItemId();
@@ -109,6 +123,8 @@ public abstract class BaseActivity extends AppCompatActivity {
             intent = new Intent(this, JobPostingActivity.class);
         } else if (id == R.id.nav_my_jobs) {
             intent = new Intent(this, MyJobsActivity.class);
+        } else if (id == R.id.nav_job_listings) {
+            intent = new Intent(this, JobListingsActivity.class);
         } else if (id == R.id.nav_logout) {
             performLogout();
             return true;

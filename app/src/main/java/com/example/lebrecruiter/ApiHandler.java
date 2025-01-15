@@ -2,15 +2,18 @@ package com.example.lebrecruiter;
 
 import android.content.Context;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.nio.charset.StandardCharsets;
 
 public class ApiHandler {
     private static final String BASE_URL = "http://10.0.2.2:8080/api"; // Replace <YOUR_SERVER_IP> with your server's IP
@@ -85,16 +88,34 @@ public class ApiHandler {
         void onError(VolleyError error);
     }
 
-    public void resetPassword(JSONObject requestBody, final ResetPasswordCallback callback) {
-        String url = BASE_URL + "/users/reset-password";
+    public void createUser(JSONObject userData, final UserCreationCallback callback) {
+        String url = BASE_URL + "/users";
 
-        JsonObjectRequest request = new JsonObjectRequest(
+        JsonObjectRequest createUserRequest = new JsonObjectRequest(
                 Request.Method.POST,
                 url,
-                requestBody,
+                userData,
+                response -> callback.onSuccess(response),
+                error -> callback.onError(new Exception(error.getMessage()))
+        );
+
+        getRequestQueue().add(createUserRequest);
+    }
+
+    public interface UserCreationCallback {
+        void onSuccess(JSONObject response);
+
+        void onError(Exception error);
+    }
+
+    public void resetPassword(JSONObject requestBody, final ResetPasswordCallback callback) {
+        String url = BASE_URL + "/users/reset-password";
+        // the server is returning 200 OK instead of 201 OK so it's returning a string instead of a message, handled
+        StringRequest request = new StringRequest(
+                Request.Method.POST,
+                url,
                 response -> {
-                    String message = response.optString("message", "Password reset successful");
-                    callback.onSuccess(message);
+                    callback.onSuccess(response); // Directly pass the plain text response
                 },
                 error -> {
                     String errorMessage = "Failed to reset password";
@@ -103,13 +124,25 @@ public class ApiHandler {
                     }
                     callback.onError(errorMessage);
                 }
-        );
+        ) {
+            @Override
+            public byte[] getBody() throws AuthFailureError {
+                return requestBody.toString().getBytes(StandardCharsets.UTF_8);
+            }
+
+            @Override
+            public String getBodyContentType() {
+                return "application/json";
+            }
+        };
 
         getRequestQueue().add(request);
     }
 
+
     public interface ResetPasswordCallback {
         void onSuccess(String message);
+
         void onError(String error);
     }
 

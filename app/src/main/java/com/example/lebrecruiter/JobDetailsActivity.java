@@ -217,22 +217,26 @@ public class JobDetailsActivity extends AppCompatActivity {
 
     private String getFileName(Uri uri) {
         String result = null;
-        if (uri.getScheme().equals("content")) {
+        if ("content".equals(uri.getScheme())) {
             try (Cursor cursor = getContentResolver().query(uri, null, null, null, null)) {
                 if (cursor != null && cursor.moveToFirst()) {
-                    result = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
+                    int nameIndex = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
+                    if (nameIndex != -1) { // Ensure the column exists
+                        result = cursor.getString(nameIndex);
+                    }
                 }
             }
         }
         if (result == null) {
             result = uri.getPath();
-            int cut = result.lastIndexOf('/');
+            int cut = result != null ? result.lastIndexOf('/') : -1;
             if (cut != -1) {
                 result = result.substring(cut + 1);
             }
         }
         return result;
     }
+
 
     private void downloadFile() {
         String url = "http://10.0.2.2:8080/api/jobs/" + jobId + "/downloadWorkFile";
@@ -367,19 +371,17 @@ public class JobDetailsActivity extends AppCompatActivity {
         JSONObject jsonBody = new JSONObject(params);
 
         // Create the PUT request
-        JsonObjectRequest request = new JsonObjectRequest(Request.Method.PUT, url, jsonBody,
-                response -> {
-                    Toast.makeText(this, "Job details updated successfully!", Toast.LENGTH_SHORT).show();
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.PUT, url, jsonBody, response -> {
+            Toast.makeText(this, "Job details updated successfully!", Toast.LENGTH_SHORT).show();
 
-                    // Disable editing after saving
-                    enableEditing(false);
-                    saveButton.setVisibility(View.GONE); // Hide Save Button
-                    editButton.setVisibility(View.VISIBLE); // Show Edit Button
-                },
-                error -> {
-                    Toast.makeText(this, "Failed to update job details.", Toast.LENGTH_SHORT).show();
-                    error.printStackTrace();
-                }) {
+            // Disable editing after saving
+            enableEditing(false);
+            saveButton.setVisibility(View.GONE); // Hide Save Button
+            editButton.setVisibility(View.VISIBLE); // Show Edit Button
+        }, error -> {
+            Toast.makeText(this, "Failed to update job details.", Toast.LENGTH_SHORT).show();
+            error.printStackTrace();
+        }) {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 Map<String, String> headers = new HashMap<>();

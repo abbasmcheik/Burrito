@@ -30,6 +30,16 @@ public class MyJobsActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        // Get user role from SharedPreferences
+        String userRole = getSharedPreferences("UserPrefs", MODE_PRIVATE).getString("role", "");
+
+        // Restrict access if the user is not a recruiter
+        if (!"recruiter".equalsIgnoreCase(userRole)) {
+            Toast.makeText(this, "Access Denied. This page is only for recruiters.", Toast.LENGTH_SHORT).show();
+            finish(); // Close the activity
+            return;
+        }
+
         // Get userId from SharedPreferences
         String userId = getSharedPreferences("UserPrefs", MODE_PRIVATE).getString("userId", "");
 
@@ -42,8 +52,7 @@ public class MyJobsActivity extends BaseActivity {
 
         jobsGridView = findViewById(R.id.jobsGridView);
         jobsList = new ArrayList<>();
-        jobAdapter = new JobAdapter(this, jobsList);
-
+        jobAdapter = new JobAdapter(this, jobsList, R.layout.job_item);
         jobsGridView.setAdapter(jobAdapter);
 
         // Fetch jobs

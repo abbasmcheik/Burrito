@@ -32,6 +32,19 @@
             android:textSize="24sp"
             android:textStyle="bold" />
 
+        <!-- Edit Button -->
+        <ImageButton
+            android:id="@+id/buttonEditProfile"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@id/textViewRole"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="0dp"
+            android:layout_marginEnd="8dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="Edit Profile"
+            android:src="@android:drawable/ic_menu_edit" />
+
         <!-- First Name Box -->
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
@@ -49,6 +62,14 @@
                 android:text="First Name: "
                 android:textColor="@android:color/white"
                 android:textSize="18sp" />
+
+            <EditText
+                android:id="@+id/editTextFirstName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="First Name"
+                android:textColor="@android:color/white"
+                android:visibility="gone" />
         </androidx.cardview.widget.CardView>
 
         <!-- Last Name Box -->
@@ -68,6 +89,14 @@
                 android:text="Last Name: "
                 android:textColor="@android:color/white"
                 android:textSize="18sp" />
+
+            <EditText
+                android:id="@+id/editTextLastName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Last Name"
+                android:textColor="@android:color/white"
+                android:visibility="gone" />
         </androidx.cardview.widget.CardView>
 
         <!-- Username Box -->
@@ -124,7 +153,23 @@
                 android:text="Date of Birth: "
                 android:textColor="@android:color/white"
                 android:textSize="18sp" />
+
+            <EditText
+                android:id="@+id/editTextDateOfBirth"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="YYYY-MM-DD"
+                android:textColor="@android:color/white"
+                android:visibility="gone" />
         </androidx.cardview.widget.CardView>
+
+        <!-- Save Button -->
+        <Button
+            android:id="@+id/buttonSaveProfile"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Save"
+            android:visibility="gone" />
     </LinearLayout>
 
     <!-- Navigation Drawer -->
