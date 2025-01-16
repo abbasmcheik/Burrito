@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import com.example.lebrecruiter.R;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class JobAdapter extends android.widget.BaseAdapter {
 
@@ -60,11 +61,20 @@ public class JobAdapter extends android.widget.BaseAdapter {
             // Additional fields for job listings
             TextView skillsTextView = convertView.findViewById(R.id.textViewJobSkills);
             TextView payoutTextView = convertView.findViewById(R.id.textViewJobPayout);
+            TextView categoryTextView = convertView.findViewById(R.id.textViewJobCategory); // Add a field for category
 
             skillsTextView.setText("Skills: " + job.getSkillsRequired());
             payoutTextView.setText("Payout: $" + job.getPayout());
+            categoryTextView.setText("Category: " + job.getCategory()); // Display category
         }
 
         return convertView;
     }
+
+    public void updateJobs(List<Job> newJobs) {
+        this.jobs.clear();  // Clear the existing jobs
+        this.jobs.addAll(newJobs);  // Add the new jobs
+        notifyDataSetChanged();  // Notify the adapter that the data has changed
+    }
+
 }

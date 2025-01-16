@@ -39,7 +39,6 @@ public abstract class BaseActivity extends AppCompatActivity {
             Log.e(TAG, "Toolbar not found in layout");
             return;
         }
-
         initializeViews();
         setupDrawer();
         setupNavigationView();
@@ -89,7 +88,8 @@ public abstract class BaseActivity extends AppCompatActivity {
         navigationView.setNavigationItemSelectedListener(item -> handleNavigation(item));
     }
 
-    private void updateMenuVisibility(Menu menu) {// update drawer visibility according to userRole
+    // update drawer items visibility according to userRole
+    private void updateMenuVisibility(Menu menu) {
         MenuItem postJobItem = menu.findItem(R.id.nav_post_job);
         MenuItem myJobsItem = menu.findItem(R.id.nav_my_jobs);
         MenuItem jobListings = menu.findItem(R.id.nav_job_listings);

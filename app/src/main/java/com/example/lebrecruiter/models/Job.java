@@ -7,14 +7,16 @@ public class Job {
     private String status;
     private String skillsRequired;
     private String payout;
+    private String category; // New field
 
-    public Job(int jobId, String title, String description, String status, String skillsRequired, String payout) {
+    public Job(int jobId, String title, String description, String status, String skillsRequired, String payout, String category) {
         this.jobId = jobId;
         this.title = title;
         this.description = description;
         this.status = status;
         this.skillsRequired = skillsRequired;
         this.payout = payout;
+        this.category = category; // Initialize new field
     }
 
     public int getJobId() {
@@ -39,5 +41,9 @@ public class Job {
 
     public String getPayout() {
         return payout;
+    }
+
+    public String getCategory() {
+        return category; // New getter
     }
 }

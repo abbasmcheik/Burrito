@@ -1,9 +1,9 @@
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/gradient_background"
-    android:padding="16dp">
+    android:padding="5dp">
 
     <!-- Toolbar with Back Button -->
     <androidx.appcompat.widget.Toolbar
@@ -68,19 +68,19 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:padding="16dp"
-                    android:orientation="vertical">
-
+                    android:orientation="vertical"
+                    android:padding="16dp">
 
 
                     <EditText
                         android:id="@+id/editTextJobTitle"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:backgroundTint="@android:color/white"
                         android:hint="Title"
-                        android:visibility="gone"
                         android:textColor="@android:color/white"
-                        android:backgroundTint="@android:color/white" />
+                        android:visibility="gone" />
+
                     <TextView
                         android:id="@+id/textViewJobTitle"
                         android:layout_width="match_parent"
@@ -104,8 +104,8 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:padding="16dp"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:padding="16dp">
 
                     <TextView
                         android:id="@+id/textViewJobDescription"
@@ -119,10 +119,10 @@
                         android:id="@+id/editTextJobDescription"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:backgroundTint="@android:color/white"
                         android:hint="Description"
-                        android:visibility="gone"
                         android:textColor="@android:color/white"
-                        android:backgroundTint="@android:color/white" />
+                        android:visibility="gone" />
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
@@ -138,8 +138,8 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:padding="16dp"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:padding="16dp">
 
                     <TextView
                         android:id="@+id/textViewCategory"
@@ -153,10 +153,10 @@
                         android:id="@+id/editTextCategory"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:backgroundTint="@android:color/white"
                         android:hint="Category"
-                        android:visibility="gone"
                         android:textColor="@android:color/white"
-                        android:backgroundTint="@android:color/white" />
+                        android:visibility="gone" />
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
@@ -172,8 +172,8 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:padding="16dp"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:padding="16dp">
 
                     <TextView
                         android:id="@+id/textViewSkillsRequired"
@@ -187,10 +187,10 @@
                         android:id="@+id/editTextSkillsRequired"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:backgroundTint="@android:color/white"
                         android:hint="Skills Required"
-                        android:visibility="gone"
                         android:textColor="@android:color/white"
-                        android:backgroundTint="@android:color/white" />
+                        android:visibility="gone" />
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
@@ -205,8 +205,8 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:padding="16dp"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:padding="16dp">
 
                     <TextView
                         android:id="@+id/textViewPayout"
@@ -220,11 +220,11 @@
                         android:id="@+id/editTextPayout"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:backgroundTint="@android:color/white"
                         android:hint="Payout"
                         android:inputType="numberDecimal"
-                        android:visibility="gone"
                         android:textColor="@android:color/white"
-                        android:backgroundTint="@android:color/white" />
+                        android:visibility="gone" />
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
@@ -249,10 +249,10 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:backgroundTint="@android:color/holo_purple"
-                android:visibility="gone"
                 android:text="Save"
                 android:textColor="@android:color/white"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:visibility="gone" />
 
             <Button
                 android:id="@+id/buttonDeleteJob"

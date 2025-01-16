@@ -2,7 +2,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <!--    Internet permission-->
     <uses-permission android:name="android.permission.INTERNET" />
+
+    <!--    Read/Write permission for file manipulation-->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
@@ -52,7 +55,6 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".JobListingsActivity"
-            android:launchMode="singleTop"
             android:theme="@style/AppTheme.NoActionBar" />
 
     </application>

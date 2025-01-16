@@ -90,7 +90,7 @@ public class MyJobsActivity extends BaseActivity {
                     String payout = jobJson.getString("payout"); // Fetch payout
                     int jobId = jobJson.getInt("jobId");
 
-                    jobsList.add(new Job(jobId, title, description, status, skillsRequired, payout));
+                    jobsList.add(new Job(jobId, title, description, status, skillsRequired, payout, ""));
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
