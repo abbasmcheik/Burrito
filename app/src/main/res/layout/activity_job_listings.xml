@@ -46,6 +46,32 @@
                 android:minHeight="48dp" />
         </LinearLayout>
 
+        <Button
+            android:id="@+id/btnAdvancedSearch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Advanced Search" />
+
+        <LinearLayout
+            android:id="@+id/advancedSearchSection"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone"
+            android:padding="8dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Sort by Payout:" />
+
+            <Spinner
+                android:id="@+id/spinnerSortByPayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+
+
         <!-- Job Listings -->
         <GridView
             android:id="@+id/jobsGridView"

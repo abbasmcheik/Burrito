@@ -56,6 +56,9 @@
         <activity
             android:name=".JobListingsActivity"
             android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".JobApplicationActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
 
     </application>
 

@@ -1,6 +1,8 @@
 package com.example.lebrecruiter.models;
 
-public class Job {
+import java.io.Serializable;
+
+public class Job implements Serializable {
     private int jobId;
     private String title;
     private String description;

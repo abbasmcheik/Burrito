@@ -1,10 +1,13 @@
 package com.example.lebrecruiter;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.GridView;
+import android.widget.LinearLayout;
 import android.widget.SearchView;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -32,6 +35,10 @@ public class JobListingsActivity extends BaseActivity { //Activity for freelance
     private SearchView searchView;
     private Spinner spinnerCategory;
     private List<Job> allJobsList = new ArrayList<>();
+    //
+    private Button btnAdvancedSearch;
+    private LinearLayout advancedSearchSection;
+    private Spinner spinnerSortByPayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,14 +49,28 @@ public class JobListingsActivity extends BaseActivity { //Activity for freelance
         searchView = findViewById(R.id.searchView);
         spinnerCategory = findViewById(R.id.spinnerCategory);
 
+        // Advanced search views
+        btnAdvancedSearch = findViewById(R.id.btnAdvancedSearch);
+        advancedSearchSection = findViewById(R.id.advancedSearchSection);
+        spinnerSortByPayout = findViewById(R.id.spinnerSortByPayout);
+
         jobsList = new ArrayList<>();
         jobAdapter = new JobAdapter(this, jobsList, R.layout.job_listing_item);
         jobsGridView.setAdapter(jobAdapter);
 
-
         setupSearch();
         fetchJobs(null, ""); // Initial fetch without filters, does not use specific endpoint
         fetchCategories();
+
+        setupAdvancedSearch();
+
+        jobsGridView.setOnItemClickListener((parent, view, position, id) -> {
+            Job selectedJob = (Job) jobAdapter.getItem(position);
+            Intent intent = new Intent(JobListingsActivity.this, JobApplicationActivity.class);
+            intent.putExtra("job", selectedJob);
+            startActivity(intent);
+        });
+
     }
 
     private void setupSearch() {
@@ -215,6 +236,50 @@ public class JobListingsActivity extends BaseActivity { //Activity for freelance
 
         RequestQueue queue = Volley.newRequestQueue(this);
         queue.add(request);
+    }
+
+    private void setupAdvancedSearch() {
+        // Toggle the visibility of the advanced search section
+        btnAdvancedSearch.setOnClickListener(v -> {
+            if (advancedSearchSection.getVisibility() == View.GONE) {
+                advancedSearchSection.setVisibility(View.VISIBLE);
+            } else {
+                advancedSearchSection.setVisibility(View.GONE);
+            }
+        });
+
+        // Populate the spinner for sorting options
+        ArrayAdapter<String> sortAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, new String[]{"Ascending", "Descending"});
+        sortAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerSortByPayout.setAdapter(sortAdapter);
+
+        // Handle sorting logic
+        spinnerSortByPayout.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String sortOrder = spinnerSortByPayout.getSelectedItem().toString();
+                sortJobsByPayout(sortOrder.equals("Ascending"));
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                // No action needed
+            }
+        });
+    }
+
+    private void sortJobsByPayout(boolean ascending) {
+        jobsList.sort((job1, job2) -> {
+            try {
+                double payout1 = Double.parseDouble(job1.getPayout().replace("$", "").trim());
+                double payout2 = Double.parseDouble(job2.getPayout().replace("$", "").trim());
+                return ascending ? Double.compare(payout1, payout2) : Double.compare(payout2, payout1);
+            } catch (NumberFormatException e) {
+                e.printStackTrace();
+                return 0; // Treat invalid payout as equal
+            }
+        });
+        jobAdapter.notifyDataSetChanged();
     }
 
 
