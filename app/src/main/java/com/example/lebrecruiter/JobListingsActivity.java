@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.SearchView;
@@ -39,6 +40,8 @@ public class JobListingsActivity extends BaseActivity { //Activity for freelance
     private Button btnAdvancedSearch;
     private LinearLayout advancedSearchSection;
     private Spinner spinnerSortByPayout;
+    private CheckBox checkBoxShowOnlyOpen;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +56,7 @@ public class JobListingsActivity extends BaseActivity { //Activity for freelance
         btnAdvancedSearch = findViewById(R.id.btnAdvancedSearch);
         advancedSearchSection = findViewById(R.id.advancedSearchSection);
         spinnerSortByPayout = findViewById(R.id.spinnerSortByPayout);
+        checkBoxShowOnlyOpen = findViewById(R.id.checkBoxShowOnlyOpen);
 
         jobsList = new ArrayList<>();
         jobAdapter = new JobAdapter(this, jobsList, R.layout.job_listing_item);
@@ -173,7 +177,7 @@ public class JobListingsActivity extends BaseActivity { //Activity for freelance
                 String selectedCategory = spinnerCategory.getSelectedItem().toString();
                 if (!selectedCategory.equals("Select a category")) {
                     // Filter the current jobsList based on the selected category
-                    filterJobsByCategory(selectedCategory);
+                    filterJobs();
                 } else {
                     // Show all jobs if "Select a category" is chosen
                     jobAdapter.updateJobs(new ArrayList<>(allJobsList)); // Reset to full dataset
@@ -188,10 +192,16 @@ public class JobListingsActivity extends BaseActivity { //Activity for freelance
         });
     }
 
-    private void filterJobsByCategory(String category) {
+    private void filterJobs() {
         List<Job> filteredJobs = new ArrayList<>();
-        for (Job job : allJobsList) { // Filter using the full dataset
-            if (category.equals("Select a category") || job.getCategory().equals(category)) {
+        boolean showOnlyOpen = checkBoxShowOnlyOpen.isChecked();
+        String selectedCategory = spinnerCategory.getSelectedItem().toString();
+
+        for (Job job : allJobsList) {
+            boolean matchesCategory = selectedCategory.equals("Select a category") || job.getCategory().equals(selectedCategory);
+            boolean matchesStatus = !showOnlyOpen || job.getStatus().equalsIgnoreCase("Open");
+
+            if (matchesCategory && matchesStatus) {
                 filteredJobs.add(job);
             }
         }
@@ -199,6 +209,7 @@ public class JobListingsActivity extends BaseActivity { //Activity for freelance
         // Update the adapter with filtered jobs
         jobAdapter.updateJobs(filteredJobs);
     }
+
 
 
     private void fetchJobsByGeneralSearch(String searchTerm) {
@@ -266,7 +277,11 @@ public class JobListingsActivity extends BaseActivity { //Activity for freelance
                 // No action needed
             }
         });
+
+        // Handle "Show only Open" checkbox
+        checkBoxShowOnlyOpen.setOnCheckedChangeListener((buttonView, isChecked) -> filterJobs());
     }
+
 
     private void sortJobsByPayout(boolean ascending) {
         jobsList.sort((job1, job2) -> {

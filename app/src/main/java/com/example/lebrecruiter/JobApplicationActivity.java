@@ -19,6 +19,7 @@ public class JobApplicationActivity extends BaseActivity {
     private Button btnApplyForJob;
     private int jobId = -1;
     private boolean isApplied = false; // Replace with actual logic from your backend
+    private String selectedJobStatus = "Closed";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,7 +40,7 @@ public class JobApplicationActivity extends BaseActivity {
         SharedPreferences sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE);
         int freelancerId = Integer.parseInt(sharedPreferences.getString("userId", "-1")); // SHARED PREFS
         jobId = job.getJobId();
-
+        selectedJobStatus = job.getStatus();
         // Populate UI with job data
         if (job != null) {
             textViewJobTitle.setText(job.getTitle());
@@ -54,7 +55,7 @@ public class JobApplicationActivity extends BaseActivity {
             checkApplicationStatus(freelancerId, jobId);
         }
 
-        if (isApplied) {
+        if (isApplied || !selectedJobStatus.trim().equals("Open")) {
             btnApplyForJob.setVisibility(View.GONE);
         }
 
@@ -97,7 +98,8 @@ public class JobApplicationActivity extends BaseActivity {
                     if (response.equalsIgnoreCase("Not Applied")) {
                         isApplied = false;
                         textViewAppliedStatus.setText("Not Applied");
-                        btnApplyForJob.setVisibility(View.VISIBLE); // Show the button
+                        if (!selectedJobStatus.trim().equals("Closed"))
+                            btnApplyForJob.setVisibility(View.VISIBLE); // Show the button
                     } else {
                         isApplied = true;
                         textViewAppliedStatus.setText("Status: " + response);

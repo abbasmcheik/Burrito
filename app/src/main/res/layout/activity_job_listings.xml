@@ -18,16 +18,15 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="?attr/colorPrimary"
-            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
             android:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-            />
+            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
 
         <!-- Search and Filters -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginBottom="8dp">
+            android:layout_marginBottom="8dp"
+            android:orientation="horizontal">
 
             <!-- SearchView -->
             <SearchView
@@ -50,8 +49,8 @@
             android:id="@+id/btnAdvancedSearch"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
             android:layout_marginEnd="10dp"
+            android:layout_marginBottom="16dp"
             android:text=" Advanced Search " />
 
         <LinearLayout
@@ -59,18 +58,32 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:visibility="gone"
-            android:padding="8dp">
+            android:padding="8dp"
+            android:visibility="gone">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Sort by Payout:" />
 
-            <Spinner
-                android:id="@+id/spinnerSortByPayout"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <Spinner
+                    android:id="@+id/spinnerSortByPayout"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" />
+
+                <CheckBox
+                    android:id="@+id/checkBoxShowOnlyOpen"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:text="Show only Open" />
+            </LinearLayout>
         </LinearLayout>
 
 
@@ -79,10 +92,10 @@
             android:id="@+id/jobsGridView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:numColumns="2"
-            android:verticalSpacing="16dp"
             android:horizontalSpacing="8dp"
-            android:stretchMode="columnWidth" />
+            android:numColumns="2"
+            android:stretchMode="columnWidth"
+            android:verticalSpacing="16dp" />
     </LinearLayout>
 
     <!-- Navigation Drawer -->
