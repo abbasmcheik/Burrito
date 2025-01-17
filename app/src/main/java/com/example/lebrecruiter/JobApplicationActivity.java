@@ -2,10 +2,15 @@ package com.example.lebrecruiter;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.example.lebrecruiter.models.Job;
 
 public class JobApplicationActivity extends BaseActivity {
@@ -32,7 +37,7 @@ public class JobApplicationActivity extends BaseActivity {
 
         //Get userId and jobId
         SharedPreferences sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE);
-        String userId = sharedPreferences.getString("userId", "-1"); // SHARED PREFS
+        int freelancerId = Integer.parseInt(sharedPreferences.getString("userId", "-1")); // SHARED PREFS
         jobId = job.getJobId();
 
         // Populate UI with job data
@@ -44,22 +49,70 @@ public class JobApplicationActivity extends BaseActivity {
             textViewAppliedStatus.setText(isApplied ? "Already Applied" : "Not Applied");
         }
 
+        // Check application status
+        if (freelancerId != -1 && job != null) {
+            checkApplicationStatus(freelancerId, jobId);
+        }
+
+        if (isApplied) {
+            btnApplyForJob.setVisibility(View.GONE);
+        }
+
         // Handle Apply button click
         btnApplyForJob.setOnClickListener(v -> {
             if (!isApplied) {
-                applyForJob(job.getJobId());
+                applyForJob(jobId, freelancerId);
             } else {
                 Toast.makeText(this, "You have already applied for this job.", Toast.LENGTH_SHORT).show();
             }
         });
     }
 
-    private void applyForJob(int jobId) {
-        // Add logic to apply for the job via an API call
-        Toast.makeText(this, "Application submitted successfully!", Toast.LENGTH_SHORT).show();
-        isApplied = true;
-        textViewAppliedStatus.setText("Already Applied");
+    private void applyForJob(int jobId, int freelancerId) {
+        String url = "http://10.0.2.2:8080/api/applications/" + jobId + "?freelancerId=" + freelancerId;
+
+        StringRequest request = new StringRequest(Request.Method.POST, url,
+                response -> {
+                    Toast.makeText(this, "Application submitted successfully!", Toast.LENGTH_SHORT).show();
+                    isApplied = true;
+                    textViewAppliedStatus.setText("Already Applied");
+                    btnApplyForJob.setVisibility(View.GONE); // Hide the button
+                },
+                error -> {
+                    Toast.makeText(this, "Failed to apply for the job.", Toast.LENGTH_SHORT).show();
+                    error.printStackTrace();
+                });
+
+        RequestQueue queue = Volley.newRequestQueue(this);
+        queue.add(request);
     }
+
+
+    private void checkApplicationStatus(int freelancerId, int jobId) {
+        String url = "http://10.0.2.2:8080/api/applications/status?jobId=" + jobId + "&freelancerId=" + freelancerId;
+
+        StringRequest request = new StringRequest(Request.Method.GET, url,
+                response -> {
+                    // Update UI based on application status
+                    if (response.equalsIgnoreCase("Not Applied")) {
+                        isApplied = false;
+                        textViewAppliedStatus.setText("Not Applied");
+                        btnApplyForJob.setVisibility(View.VISIBLE); // Show the button
+                    } else {
+                        isApplied = true;
+                        textViewAppliedStatus.setText("Status: " + response);
+                        btnApplyForJob.setVisibility(View.GONE); // Hide the button
+                    }
+                },
+                error -> {
+                    Toast.makeText(this, "Failed to check application status.", Toast.LENGTH_SHORT).show();
+                    error.printStackTrace();
+                });
+
+        RequestQueue queue = Volley.newRequestQueue(this);
+        queue.add(request);
+    }
+
 
     @Override
     protected int getLayoutResourceId() {
