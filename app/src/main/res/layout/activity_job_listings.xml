@@ -50,7 +50,9 @@
             android:id="@+id/btnAdvancedSearch"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Advanced Search" />
+            android:layout_marginBottom="16dp"
+            android:layout_marginEnd="10dp"
+            android:text=" Advanced Search " />
 
         <LinearLayout
             android:id="@+id/advancedSearchSection"
