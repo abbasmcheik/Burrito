@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public abstract class VolleyMultipartRequest extends Request<NetworkResponse> {
+    //This class only purpose is to handle multi-part file transfer
 
     private final Response.Listener<NetworkResponse> mListener;
     private final Map<String, String> mHeaders;

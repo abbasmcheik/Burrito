@@ -66,13 +66,7 @@ public abstract class BaseActivity extends AppCompatActivity {
             actionBar.setHomeButtonEnabled(true);
         }
 
-        drawerToggle = new ActionBarDrawerToggle(
-                this,
-                drawerLayout,
-                toolbar,
-                R.string.open_drawer,
-                R.string.close_drawer
-        );
+        drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.open_drawer, R.string.close_drawer);
 
         drawerLayout.addDrawerListener(drawerToggle);  // Simplified listener
         drawerToggle.syncState();
@@ -93,6 +87,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         MenuItem postJobItem = menu.findItem(R.id.nav_post_job);
         MenuItem myJobsItem = menu.findItem(R.id.nav_my_jobs);
         MenuItem jobListings = menu.findItem(R.id.nav_job_listings);
+        MenuItem myResume = menu.findItem(R.id.nav_my_resume);
 
         if (postJobItem != null) {
             // Show Post Job menu item only for recruiters
@@ -105,8 +100,13 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
 
         if (jobListings != null) {
-            // Show My Jobs menu item only for freelancers
+            // Show Job Listings menu item only for freelancers
             jobListings.setVisible("Freelancer".equalsIgnoreCase(userRole));
+        }
+
+        if (myResume != null) {
+            // Show My Resume menu item only for freelancers
+            myResume.setVisible("Freelancer".equalsIgnoreCase(userRole));
         }
 
         // Add more role-based visibility logic here if needed
@@ -125,6 +125,9 @@ public abstract class BaseActivity extends AppCompatActivity {
             intent = new Intent(this, MyJobsActivity.class);
         } else if (id == R.id.nav_job_listings) {
             intent = new Intent(this, JobListingsActivity.class);
+        } else if (id == R.id.nav_my_resume && "Freelancer".equalsIgnoreCase(userRole)) {
+            intent = new Intent(this, MyResumeActivity.class);
+
         } else if (id == R.id.nav_logout) {
             performLogout();
             return true;
@@ -140,10 +143,7 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     private void performLogout() {
         // Clear preferences
-        getSharedPreferences("UserPrefs", MODE_PRIVATE)
-                .edit()
-                .clear()
-                .apply();
+        getSharedPreferences("UserPrefs", MODE_PRIVATE).edit().clear().apply();
 
         Intent logoutIntent = new Intent(this, LoginActivity.class);
         logoutIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
