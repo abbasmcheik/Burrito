@@ -88,6 +88,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         MenuItem myJobsItem = menu.findItem(R.id.nav_my_jobs);
         MenuItem jobListings = menu.findItem(R.id.nav_job_listings);
         MenuItem myResume = menu.findItem(R.id.nav_my_resume);
+        MenuItem myApplications = menu.findItem(R.id.nav_my_applications);
 
         if (postJobItem != null) {
             // Show Post Job menu item only for recruiters
@@ -109,6 +110,11 @@ public abstract class BaseActivity extends AppCompatActivity {
             myResume.setVisible("Freelancer".equalsIgnoreCase(userRole));
         }
 
+        if (myApplications != null) {
+            // Show My Resume menu item only for freelancers
+            myApplications.setVisible("Freelancer".equalsIgnoreCase(userRole));
+        }
+
         // Add more role-based visibility logic here if needed
     }
 
@@ -127,7 +133,8 @@ public abstract class BaseActivity extends AppCompatActivity {
             intent = new Intent(this, JobListingsActivity.class);
         } else if (id == R.id.nav_my_resume && "Freelancer".equalsIgnoreCase(userRole)) {
             intent = new Intent(this, MyResumeActivity.class);
-
+        } else if (id == R.id.nav_my_applications && "Freelancer".equalsIgnoreCase(userRole)) {
+            intent = new Intent(this, MyApplicationsActivity.class);
         } else if (id == R.id.nav_logout) {
             performLogout();
             return true;

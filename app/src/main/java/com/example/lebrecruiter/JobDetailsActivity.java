@@ -290,9 +290,21 @@ public class JobDetailsActivity extends AppCompatActivity {
     }
 
     private void showDeleteConfirmationDialog() {
-        // Show a confirmation dialog before deleting
-        new AlertDialog.Builder(this).setTitle("Delete Job").setMessage("Are you sure you want to delete this job?").setPositiveButton("Delete", (dialog, which) -> deleteJob()).setNegativeButton("Cancel", null).show();
+        AlertDialog dialog = new AlertDialog.Builder(this)
+                .setTitle("Delete Job")
+                .setMessage("Are you sure you want to delete this job?")
+                .setPositiveButton("Yes", (dialogInterface, which) -> deleteJob())
+                .setNegativeButton("No", (dialogInterface, which) -> dialogInterface.dismiss())
+                .create();
+
+        dialog.setOnShowListener(d -> {
+            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(ContextCompat.getColor(this, android.R.color.holo_red_dark));
+            dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(ContextCompat.getColor(this, android.R.color.holo_blue_dark));
+        });
+
+        dialog.show();
     }
+
 
     private void deleteJob() {
         String url = "http://10.0.2.2:8080/api/jobs/" + jobId;

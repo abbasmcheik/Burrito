@@ -67,6 +67,11 @@
         <activity
             android:name=".JobApplicationActivity"
             android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".MyApplicationsActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+
+
 
     </application>
 

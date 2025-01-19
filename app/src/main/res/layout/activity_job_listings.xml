@@ -95,7 +95,7 @@
             android:horizontalSpacing="8dp"
             android:numColumns="2"
             android:stretchMode="columnWidth"
-            android:verticalSpacing="16dp" />
+            android:verticalSpacing="30dp" />
     </LinearLayout>
 
     <!-- Navigation Drawer -->

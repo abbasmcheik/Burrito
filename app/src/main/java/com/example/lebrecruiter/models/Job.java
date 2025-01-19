@@ -6,19 +6,19 @@ public class Job implements Serializable {
     private int jobId;
     private String title;
     private String description;
-    private String status;
+    private String category;
     private String skillsRequired;
-    private String payout;
-    private String category; // New field
+    private String payout; // Changed from double to String
+    private String status;
 
-    public Job(int jobId, String title, String description, String status, String skillsRequired, String payout, String category) {
+    public Job(int jobId, String title, String description, String category, String skillsRequired, String payout, String status) {
         this.jobId = jobId;
         this.title = title;
         this.description = description;
-        this.status = status;
+        this.category = category;
         this.skillsRequired = skillsRequired;
         this.payout = payout;
-        this.category = category; // Initialize new field
+        this.status = status;
     }
 
     public int getJobId() {
@@ -33,8 +33,8 @@ public class Job implements Serializable {
         return description;
     }
 
-    public String getStatus() {
-        return status;
+    public String getCategory() {
+        return category;
     }
 
     public String getSkillsRequired() {
@@ -45,7 +45,7 @@ public class Job implements Serializable {
         return payout;
     }
 
-    public String getCategory() {
-        return category; // New getter
+    public String getStatus() {
+        return status;
     }
 }

@@ -1,5 +1,6 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/gradient_background"
@@ -41,7 +42,8 @@
         android:background="?attr/selectableItemBackgroundBorderless"
         android:contentDescription="Edit"
         android:src="@android:drawable/ic_menu_edit"
-        android:visibility="visible" />
+        android:visibility="visible"
+        tools:ignore="TouchTargetSizeCheck" />
 
     <!-- Scrollable Content -->
     <ScrollView
@@ -233,6 +235,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="16dp"
+                android:layout_marginTop="10dp"
                 android:padding="12dp"
                 android:text="Upload Work File" />
 
@@ -241,6 +244,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="12dp"
+                android:layout_marginTop="8dp"
                 android:text="Download Work File" />
 
             <Button

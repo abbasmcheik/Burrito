@@ -224,6 +224,7 @@ public class MyResumeActivity extends BaseActivity {
         intent.setType("application/pdf"); // Restrict to PDF files
         startActivityForResult(Intent.createChooser(intent, "Select Resume"), PICK_FILE_REQUEST);
     }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);

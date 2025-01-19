@@ -119,7 +119,7 @@ public class JobListingsActivity extends BaseActivity { //Activity for freelance
                     String payout = jobJson.getString("payout");
                     String jobCategory = jobJson.getString("category");
 
-                    Job job = new Job(jobId, jobTitle, jobDescription, status, skillsRequired, payout, jobCategory);
+                    Job job = new Job(jobId, jobTitle, jobDescription, jobCategory, skillsRequired, payout, status);
                     jobsList.add(job); // Add to currently displayed jobs
                     allJobsList.add(job); // Add to full dataset for filtering
                 } catch (JSONException e) {
@@ -211,7 +211,6 @@ public class JobListingsActivity extends BaseActivity { //Activity for freelance
     }
 
 
-
     private void fetchJobsByGeneralSearch(String searchTerm) {
         String url = "http://10.0.2.2:8080/api/jobs/general-search?searchTerm=" + (searchTerm != null ? searchTerm : "");
 
@@ -231,7 +230,7 @@ public class JobListingsActivity extends BaseActivity { //Activity for freelance
                     String payout = jobJson.getString("payout");
                     String category = jobJson.getString("category");
 
-                    Job job = new Job(jobId, jobTitle, jobDescription, status, skillsRequired, payout, category);
+                    Job job = new Job(jobId, jobTitle, jobDescription, category, skillsRequired, payout, status);
                     allJobsList.add(job);
 
                     // Add to jobsList if category matches or no category selected

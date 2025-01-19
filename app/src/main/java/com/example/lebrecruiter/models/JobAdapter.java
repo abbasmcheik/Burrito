@@ -15,9 +15,9 @@ import java.util.List;
 
 public class JobAdapter extends android.widget.BaseAdapter {
 
-    private Context context;
-    private ArrayList<Job> jobs;
-    private int layoutResourceId;
+    private final Context context;
+    private final ArrayList<Job> jobs;
+    private final int layoutResourceId;
 
     public JobAdapter(Context context, ArrayList<Job> jobs, int layoutResourceId) {
         this.context = context;
@@ -43,38 +43,65 @@ public class JobAdapter extends android.widget.BaseAdapter {
     @NonNull
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
+        ViewHolder holder;
+
         if (convertView == null) {
             convertView = LayoutInflater.from(context).inflate(layoutResourceId, parent, false);
+            holder = new ViewHolder(convertView);
+
+            // Add consistent margins
+            ViewGroup.LayoutParams layoutParams = convertView.getLayoutParams();
+            if (layoutParams instanceof ViewGroup.MarginLayoutParams) {
+                ((ViewGroup.MarginLayoutParams) layoutParams).setMargins(16, 16, 16, 25); // Adjust as needed
+            }
+
+            convertView.setTag(holder);
+        } else {
+            holder = (ViewHolder) convertView.getTag();
         }
 
-        TextView titleTextView = convertView.findViewById(R.id.textViewJobTitle);
-        TextView descriptionTextView = convertView.findViewById(R.id.textViewJobDescription);
-        TextView statusTextView = convertView.findViewById(R.id.textViewJobStatus);
+        // Reset dynamic properties
+        convertView.setVisibility(View.VISIBLE); // Ensure visibility is not overridden
+        convertView.setAlpha(1.0f); // Reset transparency if animations are used
 
+        // Set data
         Job job = jobs.get(position);
-
-        titleTextView.setText(job.getTitle());
-        descriptionTextView.setText(job.getDescription());
-        statusTextView.setText(job.getStatus());
+        holder.titleTextView.setText(job.getTitle());
+        holder.descriptionTextView.setText(job.getDescription());
+        holder.statusTextView.setText(job.getStatus());
 
         if (layoutResourceId == R.layout.job_listing_item) {
-            // Additional fields for job listings
-            TextView skillsTextView = convertView.findViewById(R.id.textViewJobSkills);
-            TextView payoutTextView = convertView.findViewById(R.id.textViewJobPayout);
-            TextView categoryTextView = convertView.findViewById(R.id.textViewJobCategory); // Add a field for category
-
-            skillsTextView.setText("Skills: " + job.getSkillsRequired());
-            payoutTextView.setText("Payout: $" + job.getPayout());
-            categoryTextView.setText("Category: " + job.getCategory()); // Display category
+            holder.skillsTextView.setText("Skills: " + job.getSkillsRequired());
+            holder.payoutTextView.setText("Payout: $" + job.getPayout());
+            holder.categoryTextView.setText("Category: " + job.getCategory());
         }
 
         return convertView;
     }
 
+
     public void updateJobs(List<Job> newJobs) {
-        this.jobs.clear();  // Clear the existing jobs
-        this.jobs.addAll(newJobs);  // Add the new jobs
-        notifyDataSetChanged();  // Notify the adapter that the data has changed
+        this.jobs.clear(); // Clear the existing jobs
+        this.jobs.addAll(newJobs); // Add the new jobs
+        notifyDataSetChanged(); // Notify the adapter that the data has changed
     }
 
+    // ViewHolder class to cache views
+    private static class ViewHolder {
+        final TextView titleTextView;
+        final TextView descriptionTextView;
+        final TextView statusTextView;
+        final TextView skillsTextView;
+        final TextView payoutTextView;
+        final TextView categoryTextView;
+
+        ViewHolder(View view) {
+            titleTextView = view.findViewById(R.id.textViewJobTitle);
+            descriptionTextView = view.findViewById(R.id.textViewJobDescription);
+            statusTextView = view.findViewById(R.id.textViewJobStatus);
+            skillsTextView = view.findViewById(R.id.textViewJobSkills);
+            payoutTextView = view.findViewById(R.id.textViewJobPayout);
+            categoryTextView = view.findViewById(R.id.textViewJobCategory);
+        }
+    }
 }

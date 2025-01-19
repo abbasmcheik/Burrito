@@ -85,12 +85,13 @@ public class MyJobsActivity extends BaseActivity {
                     JSONObject jobJson = response.getJSONObject(i);
                     String title = jobJson.getString("title");
                     String description = jobJson.getString("description");
+                    String category = jobJson.getString("category");
                     String status = jobJson.getString("status");
                     String skillsRequired = jobJson.getString("skillsRequired"); // Fetch skills
                     String payout = jobJson.getString("payout"); // Fetch payout
                     int jobId = jobJson.getInt("jobId");
 
-                    jobsList.add(new Job(jobId, title, description, status, skillsRequired, payout, ""));
+                    jobsList.add(new Job(jobId, title, description, category, skillsRequired, payout, status ));
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
