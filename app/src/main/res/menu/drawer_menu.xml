@@ -8,19 +8,19 @@
 
     <item
         android:id="@+id/nav_my_resume"
-        android:icon="@drawable/ic_person"
+        android:icon="@drawable/ic_my_resume"
         android:title="My Resume"
         tools:ignore="HardcodedText" />
 
     <item
         android:id="@+id/nav_job_listings"
-        android:icon="@drawable/ic_myjobs"
+        android:icon="@drawable/ic_job_listings"
         android:title="Job Listings"
         tools:ignore="HardcodedText" />
 
     <item
         android:id="@+id/nav_my_applications"
-        android:icon="@drawable/ic_myjobs"
+        android:icon="@drawable/ic_my_applications"
         android:title="My Applications"
         tools:ignore="HardcodedText" />
     <item
@@ -35,7 +35,7 @@
 
     <item
         android:id="@+id/nav_applications"
-        android:icon="@drawable/ic_myjobs"
+        android:icon="@drawable/ic_applications"
         android:title="Applications" />
 
     <item

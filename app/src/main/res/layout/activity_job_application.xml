@@ -10,6 +10,7 @@
         android:background="@drawable/gradient_background"
         android:orientation="vertical"
         android:padding="5dp">
+
         <!-- Toolbar -->
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
@@ -29,6 +30,25 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
+                <!-- Bookmark Button Section -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="end"
+                    android:padding="8dp"
+                    android:layout_marginBottom="16dp">
+
+                    <ImageButton
+                        android:id="@+id/btnBookmark"
+                        android:layout_width="34dp"
+                        android:layout_height="34dp"
+                        android:contentDescription="Bookmark Job"
+                        android:background="@null"
+                        android:src="@drawable/ic_bookmark_border" />
+                </LinearLayout>
+
+                <!-- Job Title -->
                 <TextView
                     android:id="@+id/textViewJobTitle"
                     android:layout_width="match_parent"
@@ -41,6 +61,7 @@
                     android:textSize="20sp"
                     android:textStyle="bold" />
 
+                <!-- Job Description -->
                 <TextView
                     android:id="@+id/textViewJobDescription"
                     android:layout_width="match_parent"
@@ -51,6 +72,7 @@
                     android:layout_marginBottom="10dp"
                     android:textColor="@color/white" />
 
+                <!-- Job Skills -->
                 <TextView
                     android:id="@+id/textViewJobSkills"
                     android:layout_width="match_parent"
@@ -58,8 +80,9 @@
                     android:paddingBottom="8dp"
                     android:layout_marginBottom="10dp"
                     android:background="@color/black"
-                    android:textColor="@color/white"/>
+                    android:textColor="@color/white" />
 
+                <!-- Job Payout -->
                 <TextView
                     android:id="@+id/textViewJobPayout"
                     android:layout_width="match_parent"
@@ -67,16 +90,18 @@
                     android:paddingBottom="8dp"
                     android:layout_marginBottom="10dp"
                     android:background="@color/black"
-                    android:textColor="@color/white"/>
+                    android:textColor="@color/white" />
 
+                <!-- Applied Status -->
                 <TextView
                     android:id="@+id/textViewAppliedStatus"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingBottom="16dp"
                     android:textStyle="italic"
-                    android:textColor="@color/red"/>
+                    android:textColor="@color/red" />
 
+                <!-- Apply Button -->
                 <Button
                     android:id="@+id/btnApplyForJob"
                     android:layout_width="match_parent"
