@@ -2,6 +2,7 @@ package com.example.lebrecruiter;
 
 import android.app.DatePickerDialog;
 import android.os.Bundle;
+import android.util.Patterns;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -47,13 +48,13 @@ public class SignUpActivity extends AppCompatActivity {
         // Handle Role Selection
         buttonRecruiter.setOnClickListener(view -> {
             selectedRole[0] = "Recruiter";
-            buttonRecruiter.setBackgroundTintList(getColorStateList(R.color.black));
+            buttonRecruiter.setBackgroundTintList(getColorStateList(R.color.purple));
             buttonFreelancer.setBackgroundTintList(getColorStateList(R.color.black));
         });
 
         buttonFreelancer.setOnClickListener(view -> {
             selectedRole[0] = "Freelancer";
-            buttonFreelancer.setBackgroundTintList(getColorStateList(R.color.black));
+            buttonFreelancer.setBackgroundTintList(getColorStateList(R.color.purple));
             buttonRecruiter.setBackgroundTintList(getColorStateList(R.color.black));
         });
 
@@ -102,12 +103,18 @@ public class SignUpActivity extends AppCompatActivity {
                 return;
             }
 
+            // Validate Email
+            if (!isValidEmail(userEmail)) {
+                Toast.makeText(this, "Please enter a valid email address", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
             if (dob.isEmpty()) {
                 Toast.makeText(this, "Please select a valid date of birth", Toast.LENGTH_SHORT).show();
                 return;
             }
 
-            // Validate age
+            // Validate age 18+
             try {
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
                 Date dobDate = sdf.parse(dob);
@@ -175,5 +182,11 @@ public class SignUpActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
+
+    private boolean isValidEmail(String email) { // Email field format validation
+        return Patterns.EMAIL_ADDRESS.matcher(email).matches();
+    }
+
 
 }

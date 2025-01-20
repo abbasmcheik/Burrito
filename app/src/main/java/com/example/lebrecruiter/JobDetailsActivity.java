@@ -242,28 +242,29 @@ public class JobDetailsActivity extends AppCompatActivity {
         String url = "http://10.0.2.2:8080/api/jobs/" + jobId + "/downloadWorkFile";
 
         Request<NetworkResponse> request = new Request<NetworkResponse>(Request.Method.GET, url, error -> {
-            Toast.makeText(this, "Failed to download file", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "No work files for this job", Toast.LENGTH_SHORT).show();
             Log.e("DownloadError", "Error: ", error);
         }) {
             @Override
             protected Response<NetworkResponse> parseNetworkResponse(NetworkResponse response) {
                 try {
-                    // Save the binary file to the public Downloads directory
-                    File downloadsFolder = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
-                    if (!downloadsFolder.exists()) {
-                        downloadsFolder.mkdirs(); // Create the Downloads folder if it doesn't exist
+                    // Check if response data is empty
+                    if (response.data == null || response.data.length == 0) {
+                        return Response.error(new ParseError(new Exception("No file available for download.")));
                     }
 
-                    // Set file name
-                    String fileName = "workfile_" + jobId + ".pdf";
+                    // Save the binary file
+                    File downloadsFolder = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+                    if (!downloadsFolder.exists()) {
+                        downloadsFolder.mkdirs();
+                    }
 
-                    // Write the binary response to the file
+                    String fileName = "workfile_" + jobId + ".pdf";
                     File outputFile = new File(downloadsFolder, fileName);
                     FileOutputStream fos = new FileOutputStream(outputFile);
-                    fos.write(response.data); // Write raw binary data
+                    fos.write(response.data);
                     fos.close();
 
-                    // Notify the user of the download location
                     runOnUiThread(() -> Toast.makeText(getApplicationContext(), "File downloaded to: " + outputFile.getAbsolutePath(), Toast.LENGTH_LONG).show());
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -274,13 +275,13 @@ public class JobDetailsActivity extends AppCompatActivity {
 
             @Override
             protected void deliverResponse(NetworkResponse response) {
-
+                // No additional delivery needed
             }
 
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 Map<String, String> headers = new HashMap<>();
-                headers.put("Accept", "application/pdf"); // Request PDF files from the server
+                headers.put("Accept", "application/pdf");
                 return headers;
             }
         };
@@ -288,6 +289,7 @@ public class JobDetailsActivity extends AppCompatActivity {
         RequestQueue queue = Volley.newRequestQueue(this);
         queue.add(request);
     }
+
 
     private void showDeleteConfirmationDialog() {
         AlertDialog dialog = new AlertDialog.Builder(this)

@@ -116,6 +116,14 @@
                 android:text="Username: "
                 android:textColor="@android:color/white"
                 android:textSize="18sp" />
+
+            <EditText
+                android:id="@+id/editTextUsername"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Username"
+                android:textColor="@android:color/white"
+                android:visibility="gone" />
         </androidx.cardview.widget.CardView>
 
         <!-- Email Box -->
@@ -135,6 +143,15 @@
                 android:text="Email: "
                 android:textColor="@android:color/white"
                 android:textSize="18sp" />
+
+            <EditText
+                android:id="@+id/editTextEmail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Email"
+                android:inputType="textEmailAddress"
+                android:textColor="@android:color/white"
+                android:visibility="gone" />
         </androidx.cardview.widget.CardView>
 
         <!-- Date of Birth Box -->
@@ -158,15 +175,19 @@
                 android:id="@+id/editTextDateOfBirth"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:clickable="true"
+                android:focusable="false"
                 android:hint="YYYY-MM-DD"
                 android:textColor="@android:color/white"
                 android:visibility="gone" />
+
         </androidx.cardview.widget.CardView>
 
         <!-- Save Button -->
         <Button
             android:id="@+id/buttonSaveProfile"
             android:layout_width="wrap_content"
+            android:layout_marginTop="15dp"
             android:layout_height="wrap_content"
             android:text="Save"
             android:visibility="gone" />

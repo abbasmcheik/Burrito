@@ -22,4 +22,12 @@
         <item name="android:textColor">#FFFFFF</item> <!-- Optional: White text for better contrast -->
     </style>
 
+    <style name="CustomDatePickerTheme" parent="Theme.AppCompat.Light.Dialog">
+        <item name="android:buttonBarStyle">@style/CustomButtonBarStyle</item>
+    </style>
+
+    <style name="CustomButtonBarStyle" parent="Widget.AppCompat.ButtonBar.AlertDialog">
+        <item name="android:textColor">#000000</item> <!-- Black text color -->
+    </style>
+
 </resources>

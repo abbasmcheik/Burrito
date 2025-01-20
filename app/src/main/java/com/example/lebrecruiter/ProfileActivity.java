@@ -1,5 +1,6 @@
 package com.example.lebrecruiter;
 
+import android.app.DatePickerDialog;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
@@ -16,13 +17,18 @@ import com.android.volley.toolbox.Volley;
 
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 public class ProfileActivity extends BaseActivity {
 
     private TextView roleTextView, firstNameTextView, lastNameTextView, usernameTextView, emailTextView, dobTextView;
     private EditText firstNameEditText, lastNameEditText, dateOfBirthEditText;
+    private EditText usernameEditText, emailEditText;
+
     private Button saveButton;
     private ImageButton editButton;
 
@@ -42,6 +48,10 @@ public class ProfileActivity extends BaseActivity {
         firstNameEditText = findViewById(R.id.editTextFirstName);
         lastNameEditText = findViewById(R.id.editTextLastName);
         dateOfBirthEditText = findViewById(R.id.editTextDateOfBirth);
+        usernameEditText = findViewById(R.id.editTextUsername);
+        emailEditText = findViewById(R.id.editTextEmail);
+
+        //Buttons
         editButton = findViewById(R.id.buttonEditProfile);
         saveButton = findViewById(R.id.buttonSaveProfile);
 
@@ -52,6 +62,9 @@ public class ProfileActivity extends BaseActivity {
 
         // Set user role at the top
         roleTextView.setText("Role: " + role);
+
+        // Setup DatePicker for the Date of Birth field
+        setupDatePicker();
 
         // Fetch user data from the server using the userId
         fetchUserData(userId);
@@ -82,7 +95,6 @@ public class ProfileActivity extends BaseActivity {
         ApiHandler.getInstance(getApplicationContext()).getUserDetails(userId, new ApiHandler.UserDetailsCallback() {
             @Override
             public void onSuccess(JSONObject user) {
-                // Populate the user info in the UI
                 firstNameTextView.setText("First Name: " + user.optString("firstName", ""));
                 lastNameTextView.setText("Last Name: " + user.optString("lastName", ""));
                 usernameTextView.setText("Username: " + user.optString("userName", ""));
@@ -97,11 +109,15 @@ public class ProfileActivity extends BaseActivity {
         });
     }
 
+
     private void toggleEditing(boolean enable) {
         toggleField(firstNameTextView, firstNameEditText, enable);
         toggleField(lastNameTextView, lastNameEditText, enable);
+        toggleField(usernameTextView, usernameEditText, enable);
+        toggleField(emailTextView, emailEditText, enable);
         toggleField(dobTextView, dateOfBirthEditText, enable);
     }
+
 
     private void toggleField(TextView textView, EditText editText, boolean editable) {
         if (editable) {
@@ -144,6 +160,8 @@ public class ProfileActivity extends BaseActivity {
         Map<String, String> params = new HashMap<>();
         params.put("firstName", firstName);
         params.put("lastName", lastName);
+        params.put("userName", usernameEditText.getText().toString().trim());
+        params.put("email", emailEditText.getText().toString().trim());
         params.put("dob", dateOfBirth);
 
         JSONObject jsonBody = new JSONObject(params);
@@ -170,6 +188,39 @@ public class ProfileActivity extends BaseActivity {
         RequestQueue queue = Volley.newRequestQueue(this);
         queue.add(request);
     }
+
+    private void setupDatePicker() {
+        dateOfBirthEditText.setOnClickListener(v -> {
+            Calendar calendar = Calendar.getInstance();
+
+            // If the EditText already has a date, parse it
+            String currentDate = dateOfBirthEditText.getText().toString().trim();
+            if (!currentDate.isEmpty()) {
+                try {
+                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
+                    calendar.setTime(sdf.parse(currentDate));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            int year = calendar.get(Calendar.YEAR);
+            int month = calendar.get(Calendar.MONTH);
+            int day = calendar.get(Calendar.DAY_OF_MONTH);
+
+            DatePickerDialog datePickerDialog = new DatePickerDialog(ProfileActivity.this, R.style.CustomDatePickerTheme, // Your custom theme
+                    (view, selectedYear, selectedMonth, selectedDay) -> {
+                        String formattedDate = String.format(Locale.US, "%04d-%02d-%02d", selectedYear, selectedMonth + 1, selectedDay);
+                        dateOfBirthEditText.setText(formattedDate);
+                    }, year, month, day);
+
+
+            // Optional: Set maximum and minimum dates
+            datePickerDialog.getDatePicker().setMaxDate(System.currentTimeMillis()); // Set today as the max date
+            datePickerDialog.show();
+        });
+    }
+
 
     @Override
     protected int getLayoutResourceId() {
