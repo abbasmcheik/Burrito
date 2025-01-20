@@ -8,6 +8,9 @@ public class Application implements Serializable {
     private int freelancerId;
     private String status;
     private String appliedAt;
+    private String freelancerName;
+    private String freelancerUserName; // New field for username
+
 
     // Fields for job details
     private String title = "(Fetching...)";
@@ -92,5 +95,21 @@ public class Application implements Serializable {
 
     public void setJobStatus(String jobStatus) {
         this.jobStatus = jobStatus;
+    }
+
+    public String getFreelancerName() {
+        return freelancerName;
+    }
+
+    public void setFreelancerName(String freelancerName) {
+        this.freelancerName = freelancerName;
+    }
+
+    public String getFreelancerUserName() {
+        return freelancerUserName;
+    }
+
+    public void setFreelancerUserName(String freelancerUserName) {
+        this.freelancerUserName = freelancerUserName;
     }
 }

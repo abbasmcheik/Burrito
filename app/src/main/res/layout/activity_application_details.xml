@@ -1,0 +1,161 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/gradient_background"
+    android:padding="16dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- Name Box -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@android:color/black"
+            android:padding="16dp"
+            android:layout_marginBottom="16dp">
+
+            <TextView
+                android:id="@+id/textViewFreelancerName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Name: "
+                android:textColor="@android:color/white"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+        <!-- Divider -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@android:color/darker_gray"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Email Box -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@android:color/black"
+            android:padding="16dp"
+            android:layout_marginBottom="16dp">
+
+            <TextView
+                android:id="@+id/textViewFreelancerEmail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Email: "
+                android:textColor="@android:color/white"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+        <!-- Divider -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@android:color/darker_gray"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Skills Box -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@android:color/black"
+            android:padding="16dp"
+            android:layout_marginBottom="16dp">
+
+            <TextView
+                android:id="@+id/textViewFreelancerSkills"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Skills: "
+                android:textColor="@android:color/white"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+        <!-- Divider -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@android:color/darker_gray"
+            android:layout_marginBottom="16dp" />
+
+        <!-- About Me Box -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@android:color/black"
+            android:padding="16dp"
+            android:layout_marginBottom="16dp">
+
+            <TextView
+                android:id="@+id/textViewFreelancerBio"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Bio: "
+                android:textColor="@android:color/white"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+        <!-- Divider -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@android:color/darker_gray"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Experience Box -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@android:color/black"
+            android:padding="16dp"
+            android:layout_marginBottom="16dp">
+
+            <TextView
+                android:id="@+id/textViewFreelancerExperience"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Experience: "
+                android:textColor="@android:color/white"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+        <!-- Download Resume Button -->
+        <Button
+            android:id="@+id/btnDownloadResume"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Download Freelancer Resume"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Accept Freelancer Button -->
+        <Button
+            android:id="@+id/btnAcceptFreelancer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Accept Freelancer for this Job"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Tooltip Text -->
+        <TextView
+            android:id="@+id/textViewTooltip"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            android:text="After accepting an application, please contact the freelancer via email."
+            android:textColor="@android:color/white"
+            android:background="@android:color/darker_gray"
+            android:textSize="14sp"
+            android:gravity="center"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="16dp"
+            android:elevation="4dp" />
+    </LinearLayout>
+</ScrollView>

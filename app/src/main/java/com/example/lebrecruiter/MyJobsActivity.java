@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -50,6 +51,12 @@ public class MyJobsActivity extends BaseActivity {
             return;
         }
 
+        ImageButton btnAddJob = findViewById(R.id.btnAddJob);
+        btnAddJob.setOnClickListener(v -> {
+            Intent intent = new Intent(MyJobsActivity.this, JobPostingActivity.class);
+            startActivity(intent);
+        });
+
         jobsGridView = findViewById(R.id.jobsGridView);
         jobsList = new ArrayList<>();
         jobAdapter = new JobAdapter(this, jobsList, R.layout.job_item);
@@ -91,7 +98,7 @@ public class MyJobsActivity extends BaseActivity {
                     String payout = jobJson.getString("payout"); // Fetch payout
                     int jobId = jobJson.getInt("jobId");
 
-                    jobsList.add(new Job(jobId, title, description, category, skillsRequired, payout, status ));
+                    jobsList.add(new Job(jobId, title, description, category, skillsRequired, payout, status));
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }

@@ -34,6 +34,11 @@
         android:title="My Jobs" />
 
     <item
+        android:id="@+id/nav_applications"
+        android:icon="@drawable/ic_myjobs"
+        android:title="Applications" />
+
+    <item
         android:id="@+id/nav_logout"
         android:icon="@drawable/ic_logout"
         android:title="Logout" />

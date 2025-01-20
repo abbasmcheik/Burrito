@@ -88,15 +88,17 @@ public abstract class BaseActivity extends AppCompatActivity {
         MenuItem myJobsItem = menu.findItem(R.id.nav_my_jobs);
         MenuItem jobListings = menu.findItem(R.id.nav_job_listings);
         MenuItem myResume = menu.findItem(R.id.nav_my_resume);
-        MenuItem myApplications = menu.findItem(R.id.nav_my_applications);
+        MenuItem myApplications = menu.findItem(R.id.nav_my_applications); //page displaying applications per freelancer
+        MenuItem Applications = menu.findItem(R.id.nav_applications);// display applications for a specific job
+
 
         if (postJobItem != null) {
-            // Show Post Job menu item only for recruiters
+            // Show Post Job menu item only for Recruiters
             postJobItem.setVisible("Recruiter".equalsIgnoreCase(userRole));
         }
 
         if (myJobsItem != null) {
-            // Show My Jobs menu item only for recruiters
+            // Show My Jobs menu item only for Recruiters
             myJobsItem.setVisible("Recruiter".equalsIgnoreCase(userRole));
         }
 
@@ -111,10 +113,14 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
 
         if (myApplications != null) {
-            // Show My Resume menu item only for freelancers
+            // Show My Applications menu item only for freelancers
             myApplications.setVisible("Freelancer".equalsIgnoreCase(userRole));
         }
 
+        if (Applications != null) {
+            // Show Applications menu item only for Recruiter
+            Applications.setVisible("Recruiter".equalsIgnoreCase(userRole));
+        }
         // Add more role-based visibility logic here if needed
     }
 
@@ -135,6 +141,8 @@ public abstract class BaseActivity extends AppCompatActivity {
             intent = new Intent(this, MyResumeActivity.class);
         } else if (id == R.id.nav_my_applications && "Freelancer".equalsIgnoreCase(userRole)) {
             intent = new Intent(this, MyApplicationsActivity.class);
+        } else if (id == R.id.nav_applications && "Recruiter".equalsIgnoreCase(userRole)) {
+            intent = new Intent(this, ApplicationsActivity.class);
         } else if (id == R.id.nav_logout) {
             performLogout();
             return true;
