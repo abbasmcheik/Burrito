@@ -78,7 +78,6 @@
                         android:id="@+id/editTextJobTitle"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:backgroundTint="@android:color/white"
                         android:hint="Title"
                         android:textColor="@android:color/white"
                         android:visibility="gone" />
@@ -121,7 +120,6 @@
                         android:id="@+id/editTextJobDescription"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:backgroundTint="@android:color/white"
                         android:hint="Description"
                         android:textColor="@android:color/white"
                         android:visibility="gone" />
@@ -155,7 +153,6 @@
                         android:id="@+id/editTextCategory"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:backgroundTint="@android:color/white"
                         android:hint="Category"
                         android:textColor="@android:color/white"
                         android:visibility="gone" />
@@ -189,7 +186,6 @@
                         android:id="@+id/editTextSkillsRequired"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:backgroundTint="@android:color/white"
                         android:hint="Skills Required"
                         android:textColor="@android:color/white"
                         android:visibility="gone" />
@@ -222,7 +218,6 @@
                         android:id="@+id/editTextPayout"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:backgroundTint="@android:color/white"
                         android:hint="Payout"
                         android:inputType="numberDecimal"
                         android:textColor="@android:color/white"

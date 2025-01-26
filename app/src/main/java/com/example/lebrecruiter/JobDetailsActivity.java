@@ -98,11 +98,11 @@ public class JobDetailsActivity extends AppCompatActivity {
         saveButton = findViewById(R.id.buttonSave);
 
         // Populate fields
-        titleTextView.setText(title);
-        descriptionTextView.setText(description);
-        categoryTextView.setText(category);
-        skillsTextView.setText(skillsRequired);
-        payoutTextView.setText(payout);
+        titleTextView.setText("Title: " + title);
+        descriptionTextView.setText("Description: " + description);
+        categoryTextView.setText("Category: " + category);
+        skillsTextView.setText("Skills Required: " + skillsRequired);
+        payoutTextView.setText("Payout: " + payout);
         statusTextView.setText("Status: " + status);
 
         titleTextView.setVisibility(View.VISIBLE);
@@ -131,21 +131,7 @@ public class JobDetailsActivity extends AppCompatActivity {
             editButton.setVisibility(View.GONE);
         }
 
-        // Handle Edit Button
-        editButton.setOnClickListener(v -> {
-            enableEditing(true);
-            saveButton.setVisibility(View.VISIBLE); // Show Save Button
-            editButton.setVisibility(View.GONE);    // Hide Edit Button
-        });
 
-        // Handle Save Button
-        saveButton.setOnClickListener(v -> {
-            if (validatePayout()) {
-                saveJobDetails(titleEditText.getText().toString().trim(), descriptionEditText.getText().toString().trim(), categoryEditText.getText().toString().trim(), skillsEditText.getText().toString().trim(), payoutEditText.getText().toString().trim());
-            } else {
-                Toast.makeText(this, "Payout must be a valid number.", Toast.LENGTH_SHORT).show();
-            }
-        });
         // Disable editing by default
         enableEditing(false);
 
@@ -166,8 +152,25 @@ public class JobDetailsActivity extends AppCompatActivity {
             // Add click listener for delete button
             deleteButton.setOnClickListener(v -> showDeleteConfirmationDialog());
         }
-    }
 
+        // Handle Edit Button
+        editButton.setOnClickListener(v -> {
+            enableEditing(true);
+            saveButton.setVisibility(View.VISIBLE); // Show Save Button
+            editButton.setVisibility(View.GONE);    // Hide Edit Button
+            deleteButton.setVisibility(View.GONE); // Hide Delete Button
+        });
+
+        // Handle Save Button
+        saveButton.setOnClickListener(v -> {
+            if (validatePayout()) {
+                saveJobDetails(titleEditText.getText().toString().trim(), descriptionEditText.getText().toString().trim(), categoryEditText.getText().toString().trim(), skillsEditText.getText().toString().trim(), payoutEditText.getText().toString().trim());
+                deleteButton.setVisibility(View.VISIBLE); // Show Delete Button after saving
+            } else {
+                Toast.makeText(this, "Payout must be a valid number.", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
 
     private void selectFile() {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
@@ -237,7 +240,6 @@ public class JobDetailsActivity extends AppCompatActivity {
         return result;
     }
 
-
     private void downloadFile() {
         String url = "http://10.0.2.2:8080/api/jobs/" + jobId + "/downloadWorkFile";
 
@@ -290,14 +292,8 @@ public class JobDetailsActivity extends AppCompatActivity {
         queue.add(request);
     }
 
-
     private void showDeleteConfirmationDialog() {
-        AlertDialog dialog = new AlertDialog.Builder(this)
-                .setTitle("Delete Job")
-                .setMessage("Are you sure you want to delete this job?")
-                .setPositiveButton("Yes", (dialogInterface, which) -> deleteJob())
-                .setNegativeButton("No", (dialogInterface, which) -> dialogInterface.dismiss())
-                .create();
+        AlertDialog dialog = new AlertDialog.Builder(this).setTitle("Delete Job").setMessage("Are you sure you want to delete this job?").setPositiveButton("Yes", (dialogInterface, which) -> deleteJob()).setNegativeButton("No", (dialogInterface, which) -> dialogInterface.dismiss()).create();
 
         dialog.setOnShowListener(d -> {
             dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(ContextCompat.getColor(this, android.R.color.holo_red_dark));
@@ -306,7 +302,6 @@ public class JobDetailsActivity extends AppCompatActivity {
 
         dialog.show();
     }
-
 
     private void deleteJob() {
         String url = "http://10.0.2.2:8080/api/jobs/" + jobId;
@@ -344,8 +339,9 @@ public class JobDetailsActivity extends AppCompatActivity {
         if (editable) {
             // When editing, copy text from TextView to EditText
             String currentText = textView.getText().toString();
-            if (currentText.startsWith(textView.getHint() + " ")) {
-                currentText = currentText.replaceFirst(textView.getHint() + " ", "").trim();
+            int prefixIndex = currentText.indexOf(":");
+            if (prefixIndex != -1) {
+                currentText = currentText.substring(prefixIndex + 1).trim(); // Remove prefix
             }
             editText.setText(currentText);
             textView.setVisibility(View.GONE);
@@ -353,14 +349,13 @@ public class JobDetailsActivity extends AppCompatActivity {
         } else {
             // When displaying, copy text from EditText to TextView only if EditText has a value
             if (!editText.getText().toString().isEmpty()) {
-                String prefix = textView.getHint() != null ? textView.getHint().toString() + " " : "";
-                textView.setText(prefix + editText.getText().toString());
+                String prefix = textView.getText().toString().split(":")[0]; // Extract prefix before ':'
+                textView.setText(prefix + ": " + editText.getText().toString().trim());
             }
             editText.setVisibility(View.GONE);
             textView.setVisibility(View.VISIBLE);
         }
     }
-
 
     private boolean validatePayout() {
         try {

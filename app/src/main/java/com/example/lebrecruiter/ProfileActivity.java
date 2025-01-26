@@ -10,6 +10,9 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.widget.TooltipCompat;
+import androidx.core.content.ContextCompat;
+
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.StringRequest;
@@ -89,6 +92,7 @@ public class ProfileActivity extends BaseActivity {
 
         // Disable Editing by Default
         toggleEditing(false);
+
     }
 
     private void fetchUserData(String userId) {
@@ -111,11 +115,36 @@ public class ProfileActivity extends BaseActivity {
 
 
     private void toggleEditing(boolean enable) {
+        // Toggle visibility and behavior for editable fields
         toggleField(firstNameTextView, firstNameEditText, enable);
         toggleField(lastNameTextView, lastNameEditText, enable);
-        toggleField(usernameTextView, usernameEditText, enable);
-        toggleField(emailTextView, emailEditText, enable);
         toggleField(dobTextView, dateOfBirthEditText, enable);
+
+        // Handle username field
+        if (enable) {
+            usernameTextView.setVisibility(View.GONE); // Hide TextView in edit mode
+            usernameEditText.setVisibility(View.VISIBLE); // Show EditText
+            usernameEditText.setText(usernameTextView.getText().toString().replace("Username: ", "").trim()); // Set the actual username
+            usernameEditText.setEnabled(false); // Non-editable
+            usernameEditText.setFocusable(false); // Ensure no focus
+            usernameEditText.setBackgroundColor(ContextCompat.getColor(this, android.R.color.darker_gray));
+        } else {
+            usernameTextView.setVisibility(View.VISIBLE); // Show TextView in view mode
+            usernameEditText.setVisibility(View.GONE); // Hide EditText
+        }
+
+        // Handle email field
+        if (enable) {
+            emailTextView.setVisibility(View.GONE); // Hide TextView in edit mode
+            emailEditText.setVisibility(View.VISIBLE); // Show EditText
+            emailEditText.setText(emailTextView.getText().toString().replace("Email: ", "").trim()); // Set the actual email
+            emailEditText.setEnabled(false); // Non-editable
+            emailEditText.setFocusable(false); // Ensure no focus
+            emailEditText.setBackgroundColor(ContextCompat.getColor(this, android.R.color.darker_gray));
+        } else {
+            emailTextView.setVisibility(View.VISIBLE); // Show TextView in view mode
+            emailEditText.setVisibility(View.GONE); // Hide EditText
+        }
     }
 
 
@@ -160,8 +189,8 @@ public class ProfileActivity extends BaseActivity {
         Map<String, String> params = new HashMap<>();
         params.put("firstName", firstName);
         params.put("lastName", lastName);
-        params.put("userName", usernameEditText.getText().toString().trim());
-        params.put("email", emailEditText.getText().toString().trim());
+        //  params.put("userName", usernameEditText.getText().toString().trim()); //do not allow to update
+        //  params.put("email", emailEditText.getText().toString().trim());       //username and email
         params.put("dob", dateOfBirth);
 
         JSONObject jsonBody = new JSONObject(params);
@@ -226,4 +255,5 @@ public class ProfileActivity extends BaseActivity {
     protected int getLayoutResourceId() {
         return R.layout.activity_profile;
     }
+
 }

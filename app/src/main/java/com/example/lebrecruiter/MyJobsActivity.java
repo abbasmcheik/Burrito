@@ -73,7 +73,7 @@ public class MyJobsActivity extends BaseActivity {
             intent.putExtra("jobId", selectedJob.getJobId());
             intent.putExtra("title", selectedJob.getTitle());
             intent.putExtra("description", selectedJob.getDescription());
-            intent.putExtra("category", "Sample Category"); // Replace with real category if available
+            intent.putExtra("category", selectedJob.getCategory()); // Replace with real category if available
             intent.putExtra("skillsRequired", selectedJob.getSkillsRequired()); // Pass actual skills
             intent.putExtra("payout", selectedJob.getPayout()); // Pass actual payout
             intent.putExtra("status", selectedJob.getStatus());

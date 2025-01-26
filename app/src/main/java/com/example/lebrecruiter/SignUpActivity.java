@@ -152,13 +152,14 @@ public class SignUpActivity extends AppCompatActivity {
                 ApiHandler.getInstance(this).createUser(userData, new ApiHandler.UserCreationCallback() {
                     @Override
                     public void onSuccess(JSONObject response) {
-                        Toast.makeText(SignUpActivity.this, "Account created successfully as " + selectedRole[0] + "!", Toast.LENGTH_SHORT).show();
-                        finish(); // Navigate back or to the login screen
+                        Toast.makeText(SignUpActivity.this, "User created successfully!", Toast.LENGTH_SHORT).show();
+                        finish();
                     }
 
                     @Override
                     public void onError(Exception error) {
-                        Toast.makeText(SignUpActivity.this, "Failed to create account: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+                        // Display the error message to the user
+                        Toast.makeText(SignUpActivity.this, error.getMessage(), Toast.LENGTH_LONG).show();
                     }
                 });
 
@@ -166,10 +167,7 @@ public class SignUpActivity extends AppCompatActivity {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            Toast.makeText(this, "Account created successfully as " + selectedRole[0] + "!", Toast.LENGTH_SHORT).show();
 
-            // Finish the activity or navigate elsewhere
-            finish();
         });
     }
 

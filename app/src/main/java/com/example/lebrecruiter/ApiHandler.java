@@ -5,7 +5,6 @@ import android.content.Context;
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
@@ -15,7 +14,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.nio.charset.StandardCharsets;
-import java.util.Map;
 
 public class ApiHandler {
     private static final String BASE_URL = "http://10.0.2.2:8080/api";
@@ -53,13 +51,7 @@ public class ApiHandler {
             e.printStackTrace();
         }
 
-        JsonObjectRequest loginRequest = new JsonObjectRequest(
-                Request.Method.POST,
-                url,
-                requestBody,
-                response -> callback.onSuccess(response),
-                error -> callback.onError(error)
-        );
+        JsonObjectRequest loginRequest = new JsonObjectRequest(Request.Method.POST, url, requestBody, response -> callback.onSuccess(response), error -> callback.onError(error));
 
         getRequestQueue().add(loginRequest);
     }
@@ -67,13 +59,7 @@ public class ApiHandler {
     public void getUserDetails(String userId, final UserDetailsCallback callback) {
         String url = BASE_URL + "/users/" + userId;
 
-        JsonObjectRequest userDetailsRequest = new JsonObjectRequest(
-                Request.Method.GET,
-                url,
-                null,
-                response -> callback.onSuccess(response),
-                error -> callback.onError(error)
-        );
+        JsonObjectRequest userDetailsRequest = new JsonObjectRequest(Request.Method.GET, url, null, response -> callback.onSuccess(response), error -> callback.onError(error));
 
         getRequestQueue().add(userDetailsRequest);
     }
@@ -93,16 +79,25 @@ public class ApiHandler {
     public void createUser(JSONObject userData, final UserCreationCallback callback) {
         String url = BASE_URL + "/users";
 
-        JsonObjectRequest createUserRequest = new JsonObjectRequest(
-                Request.Method.POST,
-                url,
-                userData,
+        JsonObjectRequest createUserRequest = new JsonObjectRequest(Request.Method.POST, url, userData,
                 response -> callback.onSuccess(response),
-                error -> callback.onError(new Exception(error.getMessage()))
-        );
+                error -> {
+                    String errorMessage = "Failed to create user.";
+                    if (error.networkResponse != null && error.networkResponse.statusCode == 409) {
+                        // Extract error message from the server response
+                        errorMessage = new String(error.networkResponse.data, StandardCharsets.UTF_8);
+                    }
+                    callback.onError(new Exception(errorMessage));
+                }) {
+            @Override
+            public String getBodyContentType() {
+                return "application/json";
+            }
+        };
 
         getRequestQueue().add(createUserRequest);
     }
+
 
     public interface UserCreationCallback {
         void onSuccess(JSONObject response);
@@ -113,20 +108,15 @@ public class ApiHandler {
     public void resetPassword(JSONObject requestBody, final ResetPasswordCallback callback) {
         String url = BASE_URL + "/users/reset-password";
         // the server is returning 200 OK instead of 201 OK so it's returning a string instead of a message, handled
-        StringRequest request = new StringRequest(
-                Request.Method.POST,
-                url,
-                response -> {
-                    callback.onSuccess(response); // Directly pass the plain text response
-                },
-                error -> {
-                    String errorMessage = "Failed to reset password";
-                    if (error.networkResponse != null) {
-                        errorMessage += ": " + new String(error.networkResponse.data);
-                    }
-                    callback.onError(errorMessage);
-                }
-        ) {
+        StringRequest request = new StringRequest(Request.Method.POST, url, response -> {
+            callback.onSuccess(response); // Directly pass the plain text response
+        }, error -> {
+            String errorMessage = "Failed to reset password";
+            if (error.networkResponse != null) {
+                errorMessage += ": " + new String(error.networkResponse.data);
+            }
+            callback.onError(errorMessage);
+        }) {
             @Override
             public byte[] getBody() throws AuthFailureError {
                 return requestBody.toString().getBytes(StandardCharsets.UTF_8);
@@ -140,9 +130,6 @@ public class ApiHandler {
 
         getRequestQueue().add(request);
     }
-
-
-
 
     public interface ResetPasswordCallback {
         void onSuccess(String message);

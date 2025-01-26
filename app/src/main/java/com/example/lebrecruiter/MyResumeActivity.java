@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,9 +26,10 @@ import java.util.Map;
 
 public class MyResumeActivity extends BaseActivity {
 
+    private ImageButton editButton;
     private TextView experienceTextView, skillsTextView, aboutMeTextView;
     private EditText experienceEditText, skillsEditText, aboutMeEditText;
-    private Button editButton, saveButton;
+    private Button saveButton;
     private RequestQueue requestQueue;
     private String userId;
     private static final int PICK_FILE_REQUEST = 1;
@@ -102,7 +104,6 @@ public class MyResumeActivity extends BaseActivity {
         requestQueue.add(request);
     }
 
-
     private void updateResume(String userId, String experience, String skills, String aboutMe) {
         String url = "http://10.0.2.2:8080/api/resumes/" + userId;
 
@@ -136,7 +137,6 @@ public class MyResumeActivity extends BaseActivity {
         requestQueue.add(request);
     }
 
-
     private void toggleEditing(boolean enable) {
         if (enable) {
             // Enable editing: copy TextView content to EditText
@@ -144,21 +144,22 @@ public class MyResumeActivity extends BaseActivity {
             toggleField(skillsTextView, skillsEditText, true);
             toggleField(aboutMeTextView, aboutMeEditText, true);
 
-            // Show EditText fields and Save button, hide TextView fields and Edit button
+            // Show EditText fields and Save button, hide TextView fields, Edit button, and Upload button
             editButton.setVisibility(View.GONE);
             saveButton.setVisibility(View.VISIBLE);
+            uploadResumeButton.setVisibility(View.GONE); // Hide upload button during editing
         } else {
             // Disable editing: copy EditText content back to TextView
             toggleField(experienceTextView, experienceEditText, false);
             toggleField(skillsTextView, skillsEditText, false);
             toggleField(aboutMeTextView, aboutMeEditText, false);
 
-            // Show TextView fields and Edit button, hide EditText fields and Save button
+            // Show TextView fields and Edit button, hide EditText fields, Save button, and show Upload button
             editButton.setVisibility(View.VISIBLE);
             saveButton.setVisibility(View.GONE);
+            uploadResumeButton.setVisibility(View.VISIBLE); // Show upload button when not editing
         }
     }
-
 
     private void toggleField(TextView textView, EditText editText, boolean editable) {
         if (editable) {
@@ -185,7 +186,6 @@ public class MyResumeActivity extends BaseActivity {
         }
     }
 
-
     private boolean validateFields(String experience, String skills, String aboutMe) {
         if (experience.isEmpty() || skills.isEmpty() || aboutMe.isEmpty()) {
             Toast.makeText(this, "All fields are required.", Toast.LENGTH_SHORT).show();
@@ -202,18 +202,17 @@ public class MyResumeActivity extends BaseActivity {
                     Toast.makeText(MyResumeActivity.this, "Resume uploaded successfully!", Toast.LENGTH_SHORT).show();
                 },
                 error -> {
-                    Toast.makeText(MyResumeActivity.this, "Failed to upload resume", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MyResumeActivity.this, "Failed to upload resume: " + error.getMessage(), Toast.LENGTH_SHORT).show();
                     error.printStackTrace();
                 }) {
             @Override
-            protected Map<String, VolleyMultipartRequest.DataPart> getByteData() {
+            protected Map<String, DataPart> getByteData() {
                 Map<String, DataPart> params = new HashMap<>();
-                params.put("file", new DataPart("resume.pdf", fileBytes, "application/pdf"));
+                params.put("file", new DataPart("resume.pdf", fileBytes, "application/pdf")); // Key must match server's expectation
                 return params;
             }
         };
 
-        // Add request to Volley request queue
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         requestQueue.add(request);
     }
