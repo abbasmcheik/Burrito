@@ -70,6 +70,19 @@ public class JobAdapter extends android.widget.BaseAdapter {
         holder.descriptionTextView.setText(job.getDescription());
         holder.statusTextView.setText(job.getStatus());
 
+        // Dynamically set the status color
+        switch (job.getStatus()) {
+            case "Open":
+                holder.statusTextView.setTextColor(context.getResources().getColor(android.R.color.holo_green_dark));
+                break;
+            case "Closed":
+                holder.statusTextView.setTextColor(context.getResources().getColor(android.R.color.holo_red_dark));
+                break;
+            default:
+                holder.statusTextView.setTextColor(context.getResources().getColor(android.R.color.holo_orange_light));
+                break;
+        }
+
         if (layoutResourceId == R.layout.job_listing_item) {
             holder.skillsTextView.setText("Skills: " + job.getSkillsRequired());
             holder.payoutTextView.setText("Payout: $" + job.getPayout());

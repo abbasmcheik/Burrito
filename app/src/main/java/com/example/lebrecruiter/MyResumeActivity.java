@@ -53,6 +53,9 @@ public class MyResumeActivity extends BaseActivity {
         editButton = findViewById(R.id.buttonEditResume);
         saveButton = findViewById(R.id.buttonSaveResume);
         uploadResumeButton = findViewById(R.id.buttonUploadResume);
+
+        // Disable upload button by default
+        uploadResumeButton.setEnabled(false);
         uploadResumeButton.setOnClickListener(v -> openFileChooser());
 
         // Initialize Volley RequestQueue
@@ -62,7 +65,7 @@ public class MyResumeActivity extends BaseActivity {
         SharedPreferences sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE);
         userId = sharedPreferences.getString("userId", "-1");
 
-        // Load resume data
+        // Load resume data and check existence
         getResume(userId);
 
         // Edit Button Logic
@@ -75,7 +78,7 @@ public class MyResumeActivity extends BaseActivity {
             String aboutMe = aboutMeEditText.getText().toString().trim();
 
             if (validateFields(experience, skills, aboutMe)) {
-                updateResume(userId, experience, skills, aboutMe);
+                saveResume(userId, experience, skills, aboutMe);
             }
         });
 
@@ -83,29 +86,57 @@ public class MyResumeActivity extends BaseActivity {
         toggleEditing(false);
     }
 
-
     private void getResume(String userId) {
         String url = "http://10.0.2.2:8080/api/resumes/" + userId;
 
-        StringRequest request = new StringRequest(Request.Method.GET, url,
-                response -> {
-                    try {
-                        // Parse response
-                        JSONObject resume = new JSONObject(response);
-                        experienceTextView.setText("Years of Experience: " + resume.optString("yearsOfExperience", ""));
-                        skillsTextView.setText("Skills: " + resume.optString("skills", ""));
-                        aboutMeTextView.setText("About Me: " + resume.optString("aboutMe", ""));
-                    } catch (Exception e) {
-                        Toast.makeText(MyResumeActivity.this, "Failed to parse resume data.", Toast.LENGTH_SHORT).show();
-                    }
-                },
-                error -> Toast.makeText(MyResumeActivity.this, "Failed to fetch resume data.", Toast.LENGTH_SHORT).show());
+        StringRequest request = new StringRequest(Request.Method.GET, url, response -> {
+            try {
+                // Parse response
+                JSONObject resume = new JSONObject(response);
+                experienceTextView.setText("Years of Experience: " + resume.optString("yearsOfExperience", ""));
+                skillsTextView.setText("Skills: " + resume.optString("skills", ""));
+                aboutMeTextView.setText("About Me: " + resume.optString("aboutMe", ""));
+
+                // Enable the upload button as resume exists
+                uploadResumeButton.setEnabled(true);
+            } catch (Exception e) {
+                Toast.makeText(MyResumeActivity.this, "Failed to parse resume data.", Toast.LENGTH_SHORT).show();
+            }
+        }, error -> {
+            if (error.networkResponse != null && error.networkResponse.statusCode == 404) {
+                // Resume does not exist, show a message
+                Toast.makeText(MyResumeActivity.this, "Please set up your resume before uploading a CV.", Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(MyResumeActivity.this, "Failed to fetch resume data.", Toast.LENGTH_SHORT).show();
+            }
+        });
 
         requestQueue.add(request);
     }
 
-    private void updateResume(String userId, String experience, String skills, String aboutMe) {
-        String url = "http://10.0.2.2:8080/api/resumes/" + userId;
+
+    private void saveResume(String userId, String experience, String skills, String aboutMe) {
+        String getUrl = "http://10.0.2.2:8080/api/resumes/" + userId;
+
+        // Check if resume exists using GET API
+        StringRequest getRequest = new StringRequest(Request.Method.GET, getUrl, response -> {
+            // Resume exists, call update
+            updateResume(userId, experience, skills, aboutMe);
+        }, error -> {
+            if (error.networkResponse != null && error.networkResponse.statusCode == 404) {
+                // Resume does not exist, call create
+                createResume(userId, experience, skills, aboutMe);
+            } else {
+                // Handle other errors
+                Toast.makeText(this, "Failed to fetch resume. Try again.", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        requestQueue.add(getRequest);
+    }
+
+    private void createResume(String userId, String experience, String skills, String aboutMe) {
+        String createUrl = "http://10.0.2.2:8080/api/resumes/" + userId + "/create";
 
         // Prepare the request payload
         Map<String, String> params = new HashMap<>();
@@ -115,12 +146,12 @@ public class MyResumeActivity extends BaseActivity {
 
         JSONObject jsonBody = new JSONObject(params);
 
-        StringRequest request = new StringRequest(Request.Method.PUT, url,
-                response -> {
-                    Toast.makeText(MyResumeActivity.this, "Resume updated successfully!", Toast.LENGTH_SHORT).show();
-                    toggleEditing(false);
-                },
-                error -> Toast.makeText(MyResumeActivity.this, "Failed to update resume.", Toast.LENGTH_SHORT).show()) {
+        StringRequest postRequest = new StringRequest(Request.Method.POST, createUrl, response -> {
+            Toast.makeText(this, "Resume created successfully!", Toast.LENGTH_SHORT).show();
+            toggleEditing(false); // Disable editing after success
+            // Enable the upload button after a successful update
+            uploadResumeButton.setEnabled(true);
+        }, error -> Toast.makeText(this, "Failed to create resume.", Toast.LENGTH_SHORT).show()) {
             @Override
             public Map<String, String> getHeaders() {
                 Map<String, String> headers = new HashMap<>();
@@ -134,7 +165,40 @@ public class MyResumeActivity extends BaseActivity {
             }
         };
 
-        requestQueue.add(request);
+        requestQueue.add(postRequest);
+    }
+
+    private void updateResume(String userId, String experience, String skills, String aboutMe) {
+        String updateUrl = "http://10.0.2.2:8080/api/resumes/" + userId;
+
+        // Prepare the request payload
+        Map<String, String> params = new HashMap<>();
+        params.put("yearsOfExperience", experience);
+        params.put("skills", skills);
+        params.put("aboutMe", aboutMe);
+
+        JSONObject jsonBody = new JSONObject(params);
+
+        StringRequest putRequest = new StringRequest(Request.Method.PUT, updateUrl, response -> {
+            Toast.makeText(this, "Resume updated successfully!", Toast.LENGTH_SHORT).show();
+            toggleEditing(false); // Disable editing after success
+            // Enable the upload button after a successful update
+            uploadResumeButton.setEnabled(true);
+        }, error -> Toast.makeText(this, "Failed to update resume.", Toast.LENGTH_SHORT).show()) {
+            @Override
+            public Map<String, String> getHeaders() {
+                Map<String, String> headers = new HashMap<>();
+                headers.put("Content-Type", "application/json");
+                return headers;
+            }
+
+            @Override
+            public byte[] getBody() {
+                return jsonBody.toString().getBytes();
+            }
+        };
+
+        requestQueue.add(putRequest);
     }
 
     private void toggleEditing(boolean enable) {
@@ -197,14 +261,12 @@ public class MyResumeActivity extends BaseActivity {
     private void uploadResume(byte[] fileBytes) {
         String url = uploadUrl.replace("{freelancerId}", userId);
 
-        VolleyMultipartRequest request = new VolleyMultipartRequest(Request.Method.POST, url,
-                response -> {
-                    Toast.makeText(MyResumeActivity.this, "Resume uploaded successfully!", Toast.LENGTH_SHORT).show();
-                },
-                error -> {
-                    Toast.makeText(MyResumeActivity.this, "Failed to upload resume: " + error.getMessage(), Toast.LENGTH_SHORT).show();
-                    error.printStackTrace();
-                }) {
+        VolleyMultipartRequest request = new VolleyMultipartRequest(Request.Method.POST, url, response -> {
+            Toast.makeText(MyResumeActivity.this, "Resume uploaded successfully!", Toast.LENGTH_SHORT).show();
+        }, error -> {
+            Toast.makeText(MyResumeActivity.this, "Failed to upload resume: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+            error.printStackTrace();
+        }) {
             @Override
             protected Map<String, DataPart> getByteData() {
                 Map<String, DataPart> params = new HashMap<>();

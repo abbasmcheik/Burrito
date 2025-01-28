@@ -1,5 +1,4 @@
-<androidx.drawerlayout.widget.DrawerLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
@@ -9,8 +8,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
         android:background="@drawable/gradient_background"
+        android:orientation="vertical"
         android:padding="5dp">
 
         <!-- Toolbar -->
@@ -26,8 +25,8 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            android:layout_marginTop="10dp">
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="16dp">
 
             <TextView
                 android:id="@+id/textViewResumeHeader"
@@ -72,8 +71,9 @@
                 android:id="@+id/editTextExperience"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@android:color/white"
                 android:hint="Enter years of experience"
+                android:inputType="number"
+                android:textColor="@android:color/white"
                 android:visibility="gone" />
         </androidx.cardview.widget.CardView>
 
@@ -126,9 +126,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Write about yourself"
-                android:visibility="gone"
+                android:minLines="3"
                 android:textColor="@android:color/white"
-                android:minLines="3" />
+                android:visibility="gone" />
         </androidx.cardview.widget.CardView>
 
         <!-- Save Button -->
@@ -136,18 +136,18 @@
             android:id="@+id/buttonSaveResume"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
             android:text="Save"
-            android:visibility="gone"
-            android:layout_marginTop="16dp" />
+            android:visibility="gone" />
 
         <!-- Upload Resume Button -->
         <Button
             android:id="@+id/buttonUploadResume"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Upload Resume"
             android:layout_marginTop="16dp"
-            android:paddingHorizontal="24dp" />
+            android:paddingHorizontal="24dp"
+            android:text="Upload Resume" />
 
     </LinearLayout>
 

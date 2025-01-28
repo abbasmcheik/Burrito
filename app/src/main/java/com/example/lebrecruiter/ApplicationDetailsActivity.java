@@ -50,6 +50,7 @@ public class ApplicationDetailsActivity extends AppCompatActivity {
         // Get freelancerId from intent
         Intent intent = getIntent();
         int freelancerId = intent.getIntExtra("freelancerId", -1);
+        int jobId = intent.getIntExtra("jobId", -1);
 
         // Fetch freelancer details
         if (freelancerId != -1) {
@@ -67,7 +68,7 @@ public class ApplicationDetailsActivity extends AppCompatActivity {
             String applicationStatus = getIntent().getStringExtra("status");
             String jobStatus = getIntent().getStringExtra("jobStatus");
 
-            handleAcceptFreelancer(applicationId, applicationStatus, jobStatus);
+            handleAcceptFreelancer(applicationId, applicationStatus, jobStatus, jobId);
         });
     }
 
@@ -160,7 +161,7 @@ public class ApplicationDetailsActivity extends AppCompatActivity {
         queue.add(request);
     }
 
-    private void handleAcceptFreelancer(int applicationId, String applicationStatus, String jobStatus) {
+    private void handleAcceptFreelancer(int applicationId, String applicationStatus, String jobStatus, int jobId) {
         // Validation checks
         if (!jobStatus.equalsIgnoreCase("Open")) {
             Toast.makeText(this, "Job is no longer open for applications.", Toast.LENGTH_SHORT).show();
@@ -178,26 +179,51 @@ public class ApplicationDetailsActivity extends AppCompatActivity {
         }
 
         // API Request to Accept the Application
-        String url = "http://10.0.2.2:8080/api/applications/" + applicationId + "/status";
+        String acceptApplicationUrl = "http://10.0.2.2:8080/api/applications/" + applicationId + "/status";
 
         JSONObject statusUpdate = new JSONObject();
         try {
-            statusUpdate.put("status", "Accepted"); // Correct casing
+            statusUpdate.put("status", "Accepted");
         } catch (JSONException e) {
             e.printStackTrace();
             Toast.makeText(this, "Failed to prepare the status update.", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        JsonObjectRequest request = new JsonObjectRequest(Request.Method.PUT, url, statusUpdate, response -> {
-            Toast.makeText(this, "Freelancer successfully accepted for this job!", Toast.LENGTH_SHORT).show();
-            finish(); // Close the activity after successful acceptance
+        JsonObjectRequest acceptRequest = new JsonObjectRequest(Request.Method.PUT, acceptApplicationUrl, statusUpdate, response -> {
+            // Application accepted, now update the job status
+            updateJobStatus(jobId);
         }, error -> {
             Toast.makeText(this, "Failed to accept freelancer. Please try again.", Toast.LENGTH_SHORT).show();
             error.printStackTrace();
         });
 
         RequestQueue queue = Volley.newRequestQueue(this);
-        queue.add(request);
+        queue.add(acceptRequest);
     }
+
+    private void updateJobStatus(int jobId) {
+        String updateJobStatusUrl = "http://10.0.2.2:8080/api/jobs/" + jobId + "/status";
+
+        JSONObject statusUpdate = new JSONObject();
+        try {
+            statusUpdate.put("status", "In_Progress");
+        } catch (JSONException e) {
+            e.printStackTrace();
+            Toast.makeText(this, "Failed to prepare the job status update.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        JsonObjectRequest jobStatusRequest = new JsonObjectRequest(Request.Method.PUT, updateJobStatusUrl, statusUpdate, response -> {
+            Toast.makeText(this, "Job status updated to 'In Progress'.", Toast.LENGTH_SHORT).show();
+            finish(); // Close the activity after successful status update
+        }, error -> {
+            Toast.makeText(this, "Failed to update job status. Please try again.", Toast.LENGTH_SHORT).show();
+            error.printStackTrace();
+        });
+
+        RequestQueue queue = Volley.newRequestQueue(this);
+        queue.add(jobStatusRequest);
+    }
+
 }

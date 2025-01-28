@@ -29,6 +29,7 @@ public class JobApplicationActivity extends BaseActivity {
     private boolean isApplied = false;
     private boolean isSaved = false; // Track bookmark state
     private String selectedJobStatus = "Closed";
+    int freelancerId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,7 +49,7 @@ public class JobApplicationActivity extends BaseActivity {
 
         // Get userId and jobId
         SharedPreferences sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE);
-        int freelancerId = Integer.parseInt(sharedPreferences.getString("userId", "-1")); // SHARED PREFS
+        freelancerId = Integer.parseInt(sharedPreferences.getString("userId", "-1")); // SHARED PREFS
         jobId = job.getJobId();
         selectedJobStatus = job.getStatus();
 
@@ -62,12 +63,12 @@ public class JobApplicationActivity extends BaseActivity {
         }
 
         // Check if the job is saved
-        checkSavedStatus(freelancerId, jobId);
+        checkSavedStatus(freelancerId, jobId, null);
 
         // Handle Bookmark Button Click
         btnBookmark.setOnClickListener(v -> {
             if (isSaved) {
-                unsaveJob(saveId);
+                unsaveJob(freelancerId, jobId);
             } else {
                 saveJob(freelancerId, jobId);
             }
@@ -78,50 +79,53 @@ public class JobApplicationActivity extends BaseActivity {
             checkApplicationStatus(freelancerId, jobId);
         }
 
-        if (isApplied || !selectedJobStatus.trim().equals("Open")) {
+        if (isApplied || !selectedJobStatus.trim().equals("Open") || selectedJobStatus.trim().equals("In_Progress")) {
             btnApplyForJob.setVisibility(View.GONE);
         }
 
         // Handle Apply button click
         btnApplyForJob.setOnClickListener(v -> {
             if (!isApplied) {
-                applyForJob(jobId, freelancerId);
+                checkResumeAndApply(freelancerId);
             } else {
                 Toast.makeText(this, "You have already applied for this job.", Toast.LENGTH_SHORT).show();
             }
         });
     }
 
-    private void checkSavedStatus(int freelancerId, int jobId) {
+    private void checkSavedStatus(int freelancerId, int jobId, Runnable onStatusChecked) {
         String url = "http://10.0.2.2:8080/api/saved-jobs/freelancer/" + freelancerId;
 
-        StringRequest request = new StringRequest(Request.Method.GET, url,
-                response -> {
-                    try {
-                        JSONArray savedJobs = new JSONArray(response);
-                        isSaved = false;
+        StringRequest request = new StringRequest(Request.Method.GET, url, response -> {
+            try {
+                JSONArray savedJobs = new JSONArray(response);
+                isSaved = false;
+                saveId = -1; // Reset saveId to avoid stale data
 
-                        for (int i = 0; i < savedJobs.length(); i++) {
-                            JSONObject savedJob = savedJobs.getJSONObject(i);
-                            JSONObject job = savedJob.getJSONObject("job");
+                for (int i = 0; i < savedJobs.length(); i++) {
+                    JSONObject savedJob = savedJobs.getJSONObject(i);
+                    JSONObject job = savedJob.getJSONObject("job");
 
-                            if (job.getInt("jobId") == jobId) {
-                                isSaved = true;
-                                saveId = savedJob.getInt("saveId"); // Store the saveId for unsaving
-                                break;
-                            }
-                        }
-
-                        updateBookmarkIcon();
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                        Toast.makeText(this, "Failed to parse saved jobs.", Toast.LENGTH_SHORT).show();
+                    if (job.getInt("jobId") == jobId) {
+                        isSaved = true;
+                        saveId = savedJob.getInt("saveId"); // Store the updated saveId
+                        break;
                     }
-                },
-                error -> {
-                    Toast.makeText(this, "Failed to check saved job status.", Toast.LENGTH_SHORT).show();
-                    error.printStackTrace();
-                });
+                }
+
+                updateBookmarkIcon();
+                // Execute the callback after updating saveId
+                if (onStatusChecked != null) {
+                    onStatusChecked.run();
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+                Toast.makeText(this, "Failed to parse saved jobs.", Toast.LENGTH_SHORT).show();
+            }
+        }, error -> {
+            Toast.makeText(this, "Failed to check saved job status.", Toast.LENGTH_SHORT).show();
+            error.printStackTrace();
+        });
 
         RequestQueue queue = Volley.newRequestQueue(this);
         queue.add(request);
@@ -150,22 +154,27 @@ public class JobApplicationActivity extends BaseActivity {
         queue.add(request);
     }
 
-    private void unsaveJob(int saveId) {
-        String url = "http://10.0.2.2:8080/api/saved-jobs/" + saveId;
+    private void unsaveJob(int freelancerId, int jobId) {
+        checkSavedStatus(freelancerId, jobId, () -> {
+            if (saveId == -1) {
+                Toast.makeText(this, "Failed to fetch bookmark details. Try again.", Toast.LENGTH_SHORT).show();
+                return;
+            }
 
-        StringRequest request = new StringRequest(Request.Method.DELETE, url,
-                response -> {
-                    isSaved = false;
-                    updateBookmarkIcon();
-                    Toast.makeText(this, "Job unbookmarked successfully!", Toast.LENGTH_SHORT).show();
-                },
-                error -> {
-                    Toast.makeText(this, "Failed to unbookmark the job.", Toast.LENGTH_SHORT).show();
-                    error.printStackTrace();
-                });
+            String url = "http://10.0.2.2:8080/api/saved-jobs/" + saveId;
 
-        RequestQueue queue = Volley.newRequestQueue(this);
-        queue.add(request);
+            StringRequest request = new StringRequest(Request.Method.DELETE, url, response -> {
+                isSaved = false;
+                updateBookmarkIcon();
+                Toast.makeText(this, "Job unbookmarked successfully!", Toast.LENGTH_SHORT).show();
+            }, error -> {
+                Toast.makeText(this, "Failed to unbookmark the job.", Toast.LENGTH_SHORT).show();
+                error.printStackTrace();
+            });
+
+            RequestQueue queue = Volley.newRequestQueue(this);
+            queue.add(request);
+        });
     }
 
     private void updateBookmarkIcon() {
@@ -174,6 +183,21 @@ public class JobApplicationActivity extends BaseActivity {
         } else {
             btnBookmark.setImageResource(R.drawable.ic_bookmark_border);
         }
+    }
+
+    private void checkResumeAndApply(int freelancerId) {
+        String url = "http://10.0.2.2:8080/api/resumes/" + freelancerId;
+
+        StringRequest request = new StringRequest(Request.Method.GET, url, response -> {
+            // Resume exists, proceed with application
+            applyForJob(jobId, freelancerId);
+        }, error -> {
+            // Resume not found
+            Toast.makeText(this, "You must set up your resume before applying for a job.", Toast.LENGTH_LONG).show();
+        });
+
+        RequestQueue queue = Volley.newRequestQueue(this);
+        queue.add(request);
     }
 
     private void applyForJob(int jobId, int freelancerId) {
@@ -201,7 +225,7 @@ public class JobApplicationActivity extends BaseActivity {
             if (response.equalsIgnoreCase("Not Applied")) {
                 isApplied = false;
                 textViewAppliedStatus.setText("Not Applied");
-                if (!selectedJobStatus.trim().equals("Closed"))
+                if (selectedJobStatus.trim().equals("Open"))
                     btnApplyForJob.setVisibility(View.VISIBLE); // Show the button
             } else {
                 isApplied = true;

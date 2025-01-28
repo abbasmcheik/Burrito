@@ -37,6 +37,7 @@ public class SignUpActivity extends AppCompatActivity {
         EditText userName = findViewById(R.id.editTextUserName);
         EditText email = findViewById(R.id.editTextEmail);
         EditText password = findViewById(R.id.editTextPassword);
+        EditText confirmPassword = findViewById(R.id.editTextConfirmPassword);
         TextView dateOfBirth = findViewById(R.id.editTextDateOfBirth);
         Button submitButton = findViewById(R.id.buttonSubmitSignUp);
         Spinner spinnerSecurityQuestion = findViewById(R.id.spinnerSecurityQuestion);
@@ -83,6 +84,7 @@ public class SignUpActivity extends AppCompatActivity {
             String uName = userName.getText().toString().trim();
             String userEmail = email.getText().toString().trim();
             String userPassword = password.getText().toString().trim();
+            String confirmPasswordText = confirmPassword.getText().toString().trim();
             String dob = dateOfBirth.getText().toString().trim();
             String selectedQuestion = spinnerSecurityQuestion.getSelectedItem().toString();
             String secAnswer = securityAnswer.getText().toString().trim();
@@ -111,6 +113,12 @@ public class SignUpActivity extends AppCompatActivity {
 
             if (dob.isEmpty()) {
                 Toast.makeText(this, "Please select a valid date of birth", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            // Validate Password Match
+            if (!userPassword.equals(confirmPasswordText)) {
+                Toast.makeText(this, "Passwords do not match", Toast.LENGTH_SHORT).show();
                 return;
             }
 

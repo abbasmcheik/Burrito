@@ -118,7 +118,7 @@ public class JobDetailsActivity extends AppCompatActivity {
             statusTextView.setTextColor(ContextCompat.getColor(this, android.R.color.holo_green_light));
         } else if ("Closed".equalsIgnoreCase(status)) {
             statusTextView.setTextColor(ContextCompat.getColor(this, android.R.color.holo_red_light));
-        } else if ("In Progress".equalsIgnoreCase(status)) {
+        } else {
             statusTextView.setTextColor(ContextCompat.getColor(this, android.R.color.holo_blue_light));
         }
 
