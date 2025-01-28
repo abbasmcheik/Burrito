@@ -81,27 +81,33 @@ public class JobListingsActivity extends BaseActivity { //Activity for freelance
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                //fetchJobs(query, spinnerCategory.getSelectedItem().toString());
                 if (query.isEmpty()) {
-                    fetchJobs(null, null); // Load all jobs
+                    resetFilters(); // Reset filters when search is cleared
                 } else {
                     fetchJobsByGeneralSearch(query);
                 }
-                searchView.clearFocus(); // clear
+                searchView.clearFocus(); // Clear focus from the search bar
                 return false;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
                 if (newText.isEmpty()) {
-                    fetchJobs(null, null);
-                    // Load all jobs when search is cleared
-                    // we can put all the logic here but it will probably overload the server ( too many calls)
+                    resetFilters(); // Reset filters when search is cleared
                 }
-                return false; // Returning false allows onQueryTextSubmit to still trigger
+                return false; // Allow onQueryTextSubmit to still trigger
             }
         });
     }
+
+    private void resetFilters() {
+        // Reset the spinner to the default value
+        spinnerCategory.setSelection(0);
+
+        // Fetch all jobs
+        fetchJobs(null, null);
+    }
+
 
     private void fetchJobs(String title, String category) { // Get all jobs
         String url = "http://10.0.2.2:8080/api/jobs?title=" + (title != null ? title : "") + "&category=" + (category != null ? category : "") + "&status=Open";
