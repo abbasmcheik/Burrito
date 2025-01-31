@@ -10,7 +10,6 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.appcompat.widget.TooltipCompat;
 import androidx.core.content.ContextCompat;
 
 import com.android.volley.Request;
@@ -53,6 +52,13 @@ public class ProfileActivity extends BaseActivity {
         dateOfBirthEditText = findViewById(R.id.editTextDateOfBirth);
         usernameEditText = findViewById(R.id.editTextUsername);
         emailEditText = findViewById(R.id.editTextEmail);
+
+        // Initialize Labels and set them to GONE by default
+        findViewById(R.id.labelFirstName).setVisibility(View.GONE);
+        findViewById(R.id.labelLastName).setVisibility(View.GONE);
+        findViewById(R.id.labelDob).setVisibility(View.GONE);
+        findViewById(R.id.labelUsername).setVisibility(View.GONE);
+        findViewById(R.id.labelEmail).setVisibility(View.GONE);
 
         //Buttons
         editButton = findViewById(R.id.buttonEditProfile);
@@ -113,12 +119,15 @@ public class ProfileActivity extends BaseActivity {
         });
     }
 
-
     private void toggleEditing(boolean enable) {
-        // Toggle visibility and behavior for editable fields
-        toggleField(firstNameTextView, firstNameEditText, enable);
-        toggleField(lastNameTextView, lastNameEditText, enable);
-        toggleField(dobTextView, dateOfBirthEditText, enable);
+        // Toggle editable fields (First Name, Last Name, Date of Birth)
+        toggleField(firstNameTextView, firstNameEditText, findViewById(R.id.labelFirstName), enable);
+        toggleField(lastNameTextView, lastNameEditText, findViewById(R.id.labelLastName), enable);
+        toggleField(dobTextView, dateOfBirthEditText, findViewById(R.id.labelDob), enable);
+
+        // Ensure labels for Username and Email remain HIDDEN unless in edit mode
+        findViewById(R.id.labelUsername).setVisibility(enable ? View.VISIBLE : View.GONE);
+        findViewById(R.id.labelEmail).setVisibility(enable ? View.VISIBLE : View.GONE);
 
         // Handle username field
         if (enable) {
@@ -148,8 +157,10 @@ public class ProfileActivity extends BaseActivity {
     }
 
 
-    private void toggleField(TextView textView, EditText editText, boolean editable) {
+    private void toggleField(TextView textView, EditText editText, TextView label, boolean editable) {
         if (editable) {
+            label.setVisibility(View.VISIBLE);  // Show label in edit mode
+
             // Copy text from TextView to EditText, removing the prefix (content after ':')
             String currentText = textView.getText().toString();
             int prefixIndex = currentText.indexOf(":");
@@ -161,6 +172,8 @@ public class ProfileActivity extends BaseActivity {
             editText.setVisibility(View.VISIBLE);
             editText.bringToFront(); // Ensure EditText is brought to the front
         } else {
+            label.setVisibility(View.GONE);  // Hide label when not editing
+
             // Copy text from EditText to TextView, adding the prefix back
             String prefix = textView.getText().toString().split(":")[0]; // Extract prefix before ':'
             textView.setText(prefix + ": " + editText.getText().toString().trim());

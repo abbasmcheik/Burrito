@@ -216,7 +216,6 @@ public class JobListingsActivity extends BaseActivity { //Activity for freelance
         jobAdapter.updateJobs(filteredJobs);
     }
 
-
     private void fetchJobsByGeneralSearch(String searchTerm) {
         String url = "http://10.0.2.2:8080/api/jobs/general-search?searchTerm=" + (searchTerm != null ? searchTerm : "");
 
@@ -287,7 +286,6 @@ public class JobListingsActivity extends BaseActivity { //Activity for freelance
         checkBoxShowOnlyOpen.setOnCheckedChangeListener((buttonView, isChecked) -> filterJobs());
     }
 
-
     private void sortJobsByPayout(boolean ascending) {
         jobsList.sort((job1, job2) -> {
             try {
@@ -301,7 +299,6 @@ public class JobListingsActivity extends BaseActivity { //Activity for freelance
         });
         jobAdapter.notifyDataSetChanged();
     }
-
 
     @Override
     protected int getLayoutResourceId() {

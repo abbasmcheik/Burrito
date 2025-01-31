@@ -216,6 +216,11 @@ public class ApplicationDetailsActivity extends AppCompatActivity {
 
         JsonObjectRequest jobStatusRequest = new JsonObjectRequest(Request.Method.PUT, updateJobStatusUrl, statusUpdate, response -> {
             Toast.makeText(this, "Job status updated to 'In Progress'.", Toast.LENGTH_SHORT).show();
+            // Set the result to indicate that changes were made
+            Intent resultIntent = new Intent();
+            resultIntent.putExtra("jobStatusUpdated", true);
+            setResult(RESULT_OK, resultIntent);
+
             finish(); // Close the activity after successful status update
         }, error -> {
             Toast.makeText(this, "Failed to update job status. Please try again.", Toast.LENGTH_SHORT).show();

@@ -27,6 +27,7 @@ import java.util.Map;
 public class MyResumeActivity extends BaseActivity {
 
     private ImageButton editButton;
+    private TextView labelExperience, labelSkills, labelAboutMe; // Added labels
     private TextView experienceTextView, skillsTextView, aboutMeTextView;
     private EditText experienceEditText, skillsEditText, aboutMeEditText;
     private Button saveButton;
@@ -50,6 +51,11 @@ public class MyResumeActivity extends BaseActivity {
         skillsEditText = findViewById(R.id.editTextSkills);
         aboutMeEditText = findViewById(R.id.editTextAboutMe);
 
+        //
+        labelExperience = findViewById(R.id.labelExperience);
+        labelSkills = findViewById(R.id.labelSkills);
+        labelAboutMe = findViewById(R.id.labelAboutMe);
+        //
         editButton = findViewById(R.id.buttonEditResume);
         saveButton = findViewById(R.id.buttonSaveResume);
         uploadResumeButton = findViewById(R.id.buttonUploadResume);
@@ -113,7 +119,6 @@ public class MyResumeActivity extends BaseActivity {
 
         requestQueue.add(request);
     }
-
 
     private void saveResume(String userId, String experience, String skills, String aboutMe) {
         String getUrl = "http://10.0.2.2:8080/api/resumes/" + userId;
@@ -203,31 +208,28 @@ public class MyResumeActivity extends BaseActivity {
 
     private void toggleEditing(boolean enable) {
         if (enable) {
-            // Enable editing: copy TextView content to EditText
-            toggleField(experienceTextView, experienceEditText, true);
-            toggleField(skillsTextView, skillsEditText, true);
-            toggleField(aboutMeTextView, aboutMeEditText, true);
+            // Enable editing: show labels, edit fields, and hide text views
+            toggleField(experienceTextView, experienceEditText, labelExperience, true);
+            toggleField(skillsTextView, skillsEditText, labelSkills, true);
+            toggleField(aboutMeTextView, aboutMeEditText, labelAboutMe, true);
 
-            // Show EditText fields and Save button, hide TextView fields, Edit button, and Upload button
             editButton.setVisibility(View.GONE);
             saveButton.setVisibility(View.VISIBLE);
-            uploadResumeButton.setVisibility(View.GONE); // Hide upload button during editing
+            uploadResumeButton.setVisibility(View.GONE);
         } else {
-            // Disable editing: copy EditText content back to TextView
-            toggleField(experienceTextView, experienceEditText, false);
-            toggleField(skillsTextView, skillsEditText, false);
-            toggleField(aboutMeTextView, aboutMeEditText, false);
+            // Disable editing: hide labels, show text views
+            toggleField(experienceTextView, experienceEditText, labelExperience, false);
+            toggleField(skillsTextView, skillsEditText, labelSkills, false);
+            toggleField(aboutMeTextView, aboutMeEditText, labelAboutMe, false);
 
-            // Show TextView fields and Edit button, hide EditText fields, Save button, and show Upload button
             editButton.setVisibility(View.VISIBLE);
             saveButton.setVisibility(View.GONE);
-            uploadResumeButton.setVisibility(View.VISIBLE); // Show upload button when not editing
+            uploadResumeButton.setVisibility(View.VISIBLE);
         }
     }
 
-    private void toggleField(TextView textView, EditText editText, boolean editable) {
+    private void toggleField(TextView textView, EditText editText, TextView label, boolean editable) {
         if (editable) {
-            // Extract text without the prefix and populate EditText
             String currentText = textView.getText().toString();
             int prefixIndex = currentText.indexOf(":");
             if (prefixIndex != -1) {
@@ -235,18 +237,17 @@ public class MyResumeActivity extends BaseActivity {
             }
             editText.setText(currentText);
 
-            // Hide TextView and show EditText
             textView.setVisibility(View.GONE);
             editText.setVisibility(View.VISIBLE);
+            label.setVisibility(View.VISIBLE); // Show label
         } else {
-            // Format text with prefix and copy back to TextView
-            String prefix = textView.getText().toString().split(":")[0]; // Extract the label
+            String prefix = textView.getText().toString().split(":")[0];
             String updatedText = editText.getText().toString().trim();
             textView.setText(prefix + ": " + updatedText);
 
-            // Hide EditText and show TextView
             editText.setVisibility(View.GONE);
             textView.setVisibility(View.VISIBLE);
+            label.setVisibility(View.GONE); // Hide label
         }
     }
 
@@ -278,7 +279,6 @@ public class MyResumeActivity extends BaseActivity {
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         requestQueue.add(request);
     }
-
 
     private void openFileChooser() {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
@@ -315,7 +315,6 @@ public class MyResumeActivity extends BaseActivity {
         }
         return byteBuffer.toByteArray();
     }
-
 
     @Override
     protected int getLayoutResourceId() {

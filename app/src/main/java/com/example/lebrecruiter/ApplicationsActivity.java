@@ -7,6 +7,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.JsonArrayRequest;
@@ -24,6 +27,17 @@ import java.util.Map;
 public class ApplicationsActivity extends BaseActivity {
 
     private LinearLayout jobsContainer;
+    private String recruiterId;
+
+    private final ActivityResultLauncher<Intent> applicationDetailsLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+        if (result.getResultCode() == RESULT_OK) {
+            Intent data = result.getData();
+            if (data != null && data.getBooleanExtra("jobStatusUpdated", false)) {
+                fetchApplications(Integer.parseInt(recruiterId));
+            }
+        }
+    });
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,7 +46,7 @@ public class ApplicationsActivity extends BaseActivity {
         jobsContainer = findViewById(R.id.jobsContainer);
 
         // Fetch recruiterId from SharedPreferences
-        String recruiterId = getSharedPreferences("UserPrefs", MODE_PRIVATE).getString("userId", "");
+        recruiterId = getSharedPreferences("UserPrefs", MODE_PRIVATE).getString("userId", "");
 
         if (recruiterId.isEmpty()) {
             Toast.makeText(this, "Recruiter ID not found. Please log in again.", Toast.LENGTH_SHORT).show();
@@ -46,6 +60,10 @@ public class ApplicationsActivity extends BaseActivity {
 
 
     private void fetchApplications(int recruiterId) {
+        if (recruiterId == -1) {
+            recruiterId = getCurrentRecruiterId(); // Ensure we always have a valid recruiterId
+        }
+
         String url = "http://10.0.2.2:8080/api/applications/recruiter/" + recruiterId;
 
         JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, url, null, response -> {
@@ -105,6 +123,12 @@ public class ApplicationsActivity extends BaseActivity {
 
         RequestQueue queue = Volley.newRequestQueue(this);
         queue.add(request);
+    }
+
+    // Utility method to get the current recruiter ID
+    private int getCurrentRecruiterId() {
+        String recruiterId = getSharedPreferences("UserPrefs", MODE_PRIVATE).getString("userId", "");
+        return recruiterId.isEmpty() ? -1 : Integer.parseInt(recruiterId);
     }
 
 
@@ -207,7 +231,9 @@ public class ApplicationsActivity extends BaseActivity {
             intent.putExtra("category", application.getCategory());
             intent.putExtra("payout", application.getPayout());
             intent.putExtra("jobStatus", application.getJobStatus());
-            startActivity(intent);
+
+            // Launch with activity result launcher
+            applicationDetailsLauncher.launch(intent);
         });
 
         return applicationLayout;
