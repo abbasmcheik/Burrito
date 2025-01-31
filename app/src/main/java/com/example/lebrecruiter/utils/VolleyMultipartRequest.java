@@ -16,8 +16,7 @@ public abstract class VolleyMultipartRequest extends Request<NetworkResponse> {
     private final Response.Listener<NetworkResponse> mListener;
     private final Map<String, String> mHeaders;
 
-    public VolleyMultipartRequest(int method, String url, Response.Listener<NetworkResponse> listener,
-                                  Response.ErrorListener errorListener) {
+    public VolleyMultipartRequest(int method, String url, Response.Listener<NetworkResponse> listener, Response.ErrorListener errorListener) {
         super(method, url, errorListener);
         this.mListener = listener;
         this.mHeaders = new HashMap<>();
@@ -37,14 +36,14 @@ public abstract class VolleyMultipartRequest extends Request<NetworkResponse> {
     public byte[] getBody() throws AuthFailureError {
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         try {
-            // Add file parts
             Map<String, DataPart> fileParams = getByteData();
             if (fileParams != null) {
                 for (Map.Entry<String, DataPart> entry : fileParams.entrySet()) {
                     addFilePart(entry.getKey(), entry.getValue(), bos);
                 }
             }
-            bos.write(("--" + getBoundary() + "--\r\n").getBytes());
+            // Add the final boundary
+            bos.write(("\r\n--" + getBoundary() + "--\r\n").getBytes());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -64,10 +63,7 @@ public abstract class VolleyMultipartRequest extends Request<NetworkResponse> {
     protected abstract Map<String, DataPart> getByteData() throws AuthFailureError;
 
     private void addFilePart(String fieldName, DataPart dataPart, ByteArrayOutputStream bos) throws IOException {
-        String header = "--" + getBoundary() + "\r\n"
-                + "Content-Disposition: form-data; name=\"" + fieldName + "\"; filename=\""
-                + dataPart.getFileName() + "\"\r\n"
-                + "Content-Type: " + dataPart.getMimeType() + "\r\n\r\n";
+        String header = "--" + getBoundary() + "\r\n" + "Content-Disposition: form-data; name=\"" + fieldName + "\"; filename=\"" + dataPart.getFileName() + "\"\r\n" + "Content-Type: " + dataPart.getMimeType() + "\r\n\r\n";
         bos.write(header.getBytes());
         bos.write(dataPart.getContent());
         bos.write("\r\n".getBytes());

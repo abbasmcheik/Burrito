@@ -3,6 +3,7 @@ package com.example.lebrecruiter;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -259,19 +260,26 @@ public class MyResumeActivity extends BaseActivity {
         return true;
     }
 
-    private void uploadResume(byte[] fileBytes) {
+    private void uploadResume(byte[] fileBytes, int attempt) {
+        if (attempt >= 3) { // Max retries = 3
+            Toast.makeText(MyResumeActivity.this, "Failed to upload resume after multiple attempts.", Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        performResumeUpload(fileBytes, attempt);
+    }
+
+    private void performResumeUpload(byte[] fileBytes, int attempt) {
         String url = uploadUrl.replace("{freelancerId}", userId);
 
-        VolleyMultipartRequest request = new VolleyMultipartRequest(Request.Method.POST, url, response -> {
-            Toast.makeText(MyResumeActivity.this, "Resume uploaded successfully!", Toast.LENGTH_SHORT).show();
-        }, error -> {
-            Toast.makeText(MyResumeActivity.this, "Failed to upload resume: " + error.getMessage(), Toast.LENGTH_SHORT).show();
-            error.printStackTrace();
+        VolleyMultipartRequest request = new VolleyMultipartRequest(Request.Method.POST, url, response -> Toast.makeText(MyResumeActivity.this, "Resume uploaded successfully!", Toast.LENGTH_SHORT).show(), error -> {
+            Log.e("UPLOAD_ERROR", "Upload failed, retrying... Attempt " + (attempt + 1), error);
+            uploadResume(fileBytes, attempt + 1); // Retry upload
         }) {
             @Override
             protected Map<String, DataPart> getByteData() {
                 Map<String, DataPart> params = new HashMap<>();
-                params.put("file", new DataPart("resume.pdf", fileBytes, "application/pdf")); // Key must match server's expectation
+                params.put("file", new DataPart("resume.pdf", fileBytes, "application/pdf"));
                 return params;
             }
         };
@@ -279,6 +287,7 @@ public class MyResumeActivity extends BaseActivity {
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         requestQueue.add(request);
     }
+
 
     private void openFileChooser() {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
@@ -296,8 +305,8 @@ public class MyResumeActivity extends BaseActivity {
                 InputStream inputStream = getContentResolver().openInputStream(data.getData());
                 byte[] fileBytes = readBytes(inputStream);
 
-                // Upload file
-                uploadResume(fileBytes);
+                // Upload file (Start attempt from 0)
+                uploadResume(fileBytes, 0);
             } catch (Exception e) {
                 Toast.makeText(this, "Failed to select file", Toast.LENGTH_SHORT).show();
                 e.printStackTrace();

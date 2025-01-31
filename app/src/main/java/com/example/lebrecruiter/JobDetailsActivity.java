@@ -33,6 +33,7 @@ import com.example.lebrecruiter.utils.VolleyMultipartRequest;
 
 import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
@@ -193,30 +194,53 @@ public class JobDetailsActivity extends AppCompatActivity {
     private void uploadFile(Uri fileUri) {
         try {
             InputStream inputStream = getContentResolver().openInputStream(fileUri);
-            byte[] fileData = new byte[inputStream.available()];
-            inputStream.read(fileData);
+            ByteArrayOutputStream byteBuffer = new ByteArrayOutputStream();
+            byte[] buffer = new byte[1024];
+            int bytesRead;
+            while ((bytesRead = inputStream.read(buffer)) != -1) {
+                byteBuffer.write(buffer, 0, bytesRead);
+            }
+            byte[] fileData = byteBuffer.toByteArray();
 
             String url = "http://10.0.2.2:8080/api/jobs/" + jobId + "/uploadWorkFile";
 
-            VolleyMultipartRequest request = new VolleyMultipartRequest(Request.Method.POST, url, response -> Toast.makeText(this, "File uploaded successfully!", Toast.LENGTH_SHORT).show(), error -> {
-                Toast.makeText(this, "Failed to upload file: " + error.getMessage(), Toast.LENGTH_SHORT).show();
-            }) {
-                @Override
-                protected Map<String, DataPart> getByteData() {
-                    Map<String, DataPart> params = new HashMap<>();
-                    params.put("file", new DataPart(getFileName(fileUri), fileData, "application/pdf"));
-                    return params;
-                }
-            };
+            Log.d("UPLOAD", "Uploading file: " + getFileName(fileUri) + ", Size: " + fileData.length + " bytes");
 
-            RequestQueue queue = Volley.newRequestQueue(this);
-            queue.add(request);
+            // Try Uploading with Retry Logic
+            sendFileRequest(url, fileData, fileUri, 0); // Initial attempt
 
         } catch (Exception e) {
             e.printStackTrace();
             Toast.makeText(this, "Error reading file", Toast.LENGTH_SHORT).show();
         }
     }
+
+    // New Method: Handles Retrying if Upload Fails
+    private void sendFileRequest(String url, byte[] fileData, Uri fileUri, int attempt) {
+        if (attempt >= 3) { // Max retries = 3
+            Toast.makeText(this, "Failed to upload file after multiple attempts.", Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        VolleyMultipartRequest request = new VolleyMultipartRequest(Request.Method.POST, url,
+                response -> Toast.makeText(this, "File uploaded successfully!", Toast.LENGTH_SHORT).show(),
+                error -> {
+                    Log.e("UPLOAD_ERROR", "Upload failed, retrying... Attempt " + (attempt + 1), error);
+                    sendFileRequest(url, fileData, fileUri, attempt + 1); // Retry Upload
+                }) {
+            @Override
+            protected Map<String, DataPart> getByteData() {
+                Map<String, DataPart> params = new HashMap<>();
+                params.put("file", new DataPart(getFileName(fileUri), fileData, "application/pdf"));
+                return params;
+            }
+        };
+
+        RequestQueue queue = Volley.newRequestQueue(this);
+        queue.add(request);
+    }
+
+
 
     private String getFileName(Uri uri) {
         String result = null;
